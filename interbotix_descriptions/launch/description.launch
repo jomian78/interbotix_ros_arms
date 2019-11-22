@@ -21,7 +21,7 @@
                                                      gazebo:=$(arg load_gazebo_material)
                                                      moveit:=$(arg load_moveit_world_frame)"/>
 
-  <param name="$(arg robot_name)/robot_description"  command="$(find xacro)/xacro --inorder $(arg model)" />
+  <param name="$(arg robot_name)/robot_description"  command="$(find xacro)/xacro $(arg model)" />
 
   <node if="$(arg use_joint_pub)"
     name="joint_state_publisher"
