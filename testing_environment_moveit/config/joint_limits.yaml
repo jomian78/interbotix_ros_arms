@@ -1,0 +1,84 @@
+# joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
+# Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
+# Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+joint_limits:
+  wx200_arm_A_elbow:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_gripper:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_left_finger:
+    has_velocity_limits: true
+    max_velocity: 1
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_right_finger:
+    has_velocity_limits: true
+    max_velocity: 1
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_shoulder:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_waist:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_wrist_angle:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_A_wrist_rotate:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_elbow:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_gripper:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_left_finger:
+    has_velocity_limits: true
+    max_velocity: 1
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_right_finger:
+    has_velocity_limits: true
+    max_velocity: 1
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_shoulder:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_waist:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_wrist_angle:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0
+  wx200_arm_B_wrist_rotate:
+    has_velocity_limits: true
+    max_velocity: 3.14159265359
+    has_acceleration_limits: false
+    max_acceleration: 0

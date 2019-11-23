@@ -1,0 +1,403 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="testing_environment">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+
+    <!-- first set of group definitions -->
+    <!-- <group name="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_waist" />
+        <joint name="wx200_arm_A_shoulder" />
+        <joint name="wx200_arm_A_elbow" />
+        <joint name="wx200_arm_A_wrist_angle" />
+        <joint name="wx200_arm_A_wrist_rotate" />
+        <joint name="wx200_arm_A_ee_arm" />
+    </group>
+
+    <group name="wx200_arm_A/gripper_controller">
+      <link name="wx200_arm_A/gripper_bar_link" />
+      <link name="wx200_arm_A/fingers_link" />
+      <link name="wx200_arm_A/ee_gripper_link" />
+      <link name="wx200_arm_A/left_finger_link" />
+      <link name="wx200_arm_A/right_finger_link" />
+    </group>
+
+    <group name="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_waist" />
+        <joint name="wx200_arm_B_shoulder" />
+        <joint name="wx200_arm_B_elbow" />
+        <joint name="wx200_arm_B_wrist_angle" />
+        <joint name="wx200_arm_B_wrist_rotate" />
+        <joint name="wx200_arm_B_ee_arm" />
+    </group>
+
+    <group name="wx200_arm_B/gripper_controller">
+      <link name="wx200_arm_B/gripper_bar_link" />
+      <link name="wx200_arm_B/fingers_link" />
+      <link name="wx200_arm_B/ee_gripper_link" />
+      <link name="wx200_arm_B/left_finger_link" />
+      <link name="wx200_arm_B/right_finger_link" />
+    </group>
+
+    <group name="testing_environment">
+      <group name="wx200_arm_A/arm_controller"/>
+      <group name="wx200_arm_A/gripper_controller"/>
+      <group name="wx200_arm_B/arm_controller"/>
+      <group name="wx200_arm_B/gripper_controller"/>
+    </group> -->
+
+    <!-- 2nd set of group definitions -->
+    <group name="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_waist" />
+        <joint name="wx200_arm_A_shoulder" />
+        <joint name="wx200_arm_A_elbow" />
+        <joint name="wx200_arm_A_wrist_angle" />
+        <joint name="wx200_arm_A_wrist_rotate" />
+        <joint name="wx200_arm_A_ee_arm" />
+        <joint name="wx200_arm_A_gripper" />
+        <joint name="wx200_arm_A_gripper_bar" />
+        <joint name="wx200_arm_A_ee_bar" />
+        <joint name="wx200_arm_A_ee_gripper" />
+        <joint name="wx200_arm_A_left_finger" />
+        <joint name="wx200_arm_A_right_finger" />
+    </group>
+
+    <group name="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_waist" />
+        <joint name="wx200_arm_B_shoulder" />
+        <joint name="wx200_arm_B_elbow" />
+        <joint name="wx200_arm_B_wrist_angle" />
+        <joint name="wx200_arm_B_wrist_rotate" />
+        <joint name="wx200_arm_B_ee_arm" />
+        <joint name="wx200_arm_B_gripper" />
+        <joint name="wx200_arm_B_gripper_bar" />
+        <joint name="wx200_arm_B_ee_bar" />
+        <joint name="wx200_arm_B_ee_gripper" />
+        <joint name="wx200_arm_B_left_finger" />
+        <joint name="wx200_arm_B_right_finger" />
+    </group>
+
+    <group name="testing_environment">
+      <group name="wx200_arm_A/arm_controller"/>
+      <group name="wx200_arm_B/arm_controller"/>
+    </group>
+
+    <!-- <group name="testing_environment">
+        <joint name="wx200_arm_B_waist" />
+        <joint name="wx200_arm_B_shoulder" />
+        <joint name="wx200_arm_B_elbow" />
+        <joint name="wx200_arm_B_wrist_angle" />
+        <joint name="wx200_arm_B_wrist_rotate" />
+        <joint name="wx200_arm_B_ee_arm" />
+        <joint name="wx200_arm_B_gripper" />
+        <joint name="wx200_arm_B_gripper_bar" />
+        <joint name="wx200_arm_B_ee_bar" />
+        <joint name="wx200_arm_B_ee_gripper" />
+        <joint name="wx200_arm_B_left_finger" />
+        <joint name="wx200_arm_B_right_finger" />
+        <joint name="wx200_arm_A_waist" />
+        <joint name="wx200_arm_A_shoulder" />
+        <joint name="wx200_arm_A_elbow" />
+        <joint name="wx200_arm_A_wrist_angle" />
+        <joint name="wx200_arm_A_wrist_rotate" />
+        <joint name="wx200_arm_A_ee_arm" />
+        <joint name="wx200_arm_A_gripper" />
+        <joint name="wx200_arm_A_gripper_bar" />
+        <joint name="wx200_arm_A_ee_bar" />
+        <joint name="wx200_arm_A_ee_gripper" />
+        <joint name="wx200_arm_A_left_finger" />
+        <joint name="wx200_arm_A_right_finger" />
+    </group> -->
+
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <!-- <group_state name="arm_A_home" group="testing_environment">
+      <joint name="wx200_arm_A_waist" value="0" />
+      <joint name="wx200_arm_A_shoulder" value="0"/>
+      <joint name="wx200_arm_A_elbow" value="0"/>
+      <joint name="wx200_arm_A_wrist_angle" value="0" />
+      <joint name="wx200_arm_A_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_home" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_shoulder" value="0"/>
+        <joint name="wx200_arm_A_elbow" value="0"/>
+        <joint name="wx200_arm_A_wrist_angle" value="0" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_upright" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_elbow" value="1.5708" />
+        <joint name="wx200_arm_A_shoulder" value="0" />
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_wrist_angle" value="0" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_sleep" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_elbow" value="-1.55" />
+        <joint name="wx200_arm_A_shoulder" value="-1.88" />
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_wrist_angle" value="-0.8" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_home" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_shoulder" value="0"/>
+        <joint name="wx200_arm_B_elbow" value="0"/>
+        <joint name="wx200_arm_B_wrist_angle" value="0" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_upright" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_elbow" value="1.5708" />
+        <joint name="wx200_arm_B_shoulder" value="0" />
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_wrist_angle" value="0" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_sleep" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_elbow" value="-1.55" />
+        <joint name="wx200_arm_B_shoulder" value="-1.88" />
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_wrist_angle" value="-0.8" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_gripper_closed" group="wx200_arm_A/gripper_controller">
+        <joint name="wx200_arm_A_left_finger" value="0.015" />
+        <joint name="wx200_arm_A_right_finger" value="-0.015" />
+    </group_state>
+
+    <group_state name="arm_A_gripper_open" group="wx200_arm_A/gripper_controller">
+        <joint name="wx200_arm_A_left_finger" value="0.037" />
+        <joint name="wx200_arm_A_right_finger" value="-0.037" />
+    </group_state>
+
+    <group_state name="arm_A_gripper_home" group="wx200_arm_A/gripper_controller">
+        <joint name="wx200_arm_A_left_finger" value="0.0195" />
+        <joint name="wx200_arm_A_right_finger" value="-0.0195" />
+    </group_state>
+
+    <group_state name="arm_B_gripper_closed" group="wx200_arm_B/gripper_controller">
+        <joint name="wx200_arm_B_left_finger" value="0.015" />
+        <joint name="wx200_arm_B_right_finger" value="-0.015" />
+    </group_state>
+
+    <group_state name="arm_B_gripper_open" group="wx200_arm_B/gripper_controller">
+        <joint name="wx200_arm_B_left_finger" value="0.037" />
+        <joint name="wx200_arm_B_right_finger" value="-0.037" />
+    </group_state>
+
+    <group_state name="arm_B_gripper_home" group="wx200_arm_B/gripper_controller">
+        <joint name="wx200_arm_B_left_finger" value="0.0195" />
+        <joint name="wx200_arm_B_right_finger" value="-0.0195" />
+    </group_state> -->
+
+    <!-- Arm A end effector -->
+    <!-- <end_effector name="wx200_arm_A_gripper" parent_link="wx200_arm_A/ee_arm_link" group="wx200_arm_A/gripper_controller" /> -->
+
+    <!-- Arm B end effector -->
+    <!-- <end_effector name="wx200_arm_B_gripper" parent_link="wx200_arm_B/ee_arm_link" group="wx200_arm_B/gripper_controller" /> -->
+
+    <group_state name="testing_environment_home" group="testing_environment">
+        <joint name="wx200_arm_A_elbow" value="0" />
+        <joint name="wx200_arm_A_gripper" value="0" />
+        <joint name="wx200_arm_A_left_finger" value="0" />
+        <joint name="wx200_arm_A_right_finger" value="0" />
+        <joint name="wx200_arm_A_shoulder" value="0" />
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_wrist_angle" value="0" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+        <joint name="wx200_arm_B_elbow" value="0" />
+        <joint name="wx200_arm_B_gripper" value="0" />
+        <joint name="wx200_arm_B_left_finger" value="0" />
+        <joint name="wx200_arm_B_right_finger" value="0" />
+        <joint name="wx200_arm_B_shoulder" value="0" />
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_wrist_angle" value="0" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_home" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_shoulder" value="0"/>
+        <joint name="wx200_arm_A_elbow" value="0"/>
+        <joint name="wx200_arm_A_wrist_angle" value="0" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+        <joint name="wx200_arm_A_gripper" value="0" />
+        <joint name="wx200_arm_A_left_finger" value="0" />
+        <joint name="wx200_arm_A_right_finger" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_upright" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_elbow" value="1.5708" />
+        <joint name="wx200_arm_A_shoulder" value="0" />
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_wrist_angle" value="0" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+        <joint name="wx200_arm_A_gripper" value="0" />
+        <joint name="wx200_arm_A_left_finger" value="0" />
+        <joint name="wx200_arm_A_right_finger" value="0" />
+    </group_state>
+
+    <group_state name="arm_A_sleep" group="wx200_arm_A/arm_controller">
+        <joint name="wx200_arm_A_elbow" value="-1.55" />
+        <joint name="wx200_arm_A_shoulder" value="-1.88" />
+        <joint name="wx200_arm_A_waist" value="0" />
+        <joint name="wx200_arm_A_wrist_angle" value="-0.8" />
+        <joint name="wx200_arm_A_wrist_rotate" value="0" />
+        <joint name="wx200_arm_A_gripper" value="0" />
+        <joint name="wx200_arm_A_left_finger" value="0" />
+        <joint name="wx200_arm_A_right_finger" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_home" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_shoulder" value="0"/>
+        <joint name="wx200_arm_B_elbow" value="0"/>
+        <joint name="wx200_arm_B_wrist_angle" value="0" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+        <joint name="wx200_arm_B_gripper" value="0" />
+        <joint name="wx200_arm_B_left_finger" value="0" />
+        <joint name="wx200_arm_B_right_finger" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_upright" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_elbow" value="1.5708" />
+        <joint name="wx200_arm_B_shoulder" value="0" />
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_wrist_angle" value="0" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+        <joint name="wx200_arm_B_gripper" value="0" />
+        <joint name="wx200_arm_B_left_finger" value="0" />
+        <joint name="wx200_arm_B_right_finger" value="0" />
+    </group_state>
+
+    <group_state name="arm_B_sleep" group="wx200_arm_B/arm_controller">
+        <joint name="wx200_arm_B_elbow" value="-1.55" />
+        <joint name="wx200_arm_B_shoulder" value="-1.88" />
+        <joint name="wx200_arm_B_waist" value="0" />
+        <joint name="wx200_arm_B_wrist_angle" value="-0.8" />
+        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+        <joint name="wx200_arm_B_gripper" value="0" />
+        <joint name="wx200_arm_B_left_finger" value="0" />
+        <joint name="wx200_arm_B_right_finger" value="0" />
+    </group_state>
+
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_A/shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_bar_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_prop_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/gripper_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/left_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/left_finger_link" link2="wx200_arm_A/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/left_finger_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/right_finger_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/shoulder_link" link2="wx200_arm_A/upper_arm_link" reason="Adjacent" />
+
+    <disable_collisions link1="wx200_arm_B/base_link" link2="wx200_arm_B/shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_bar_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_prop_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/gripper_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/left_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/left_finger_link" link2="wx200_arm_B/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/left_finger_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/right_finger_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/shoulder_link" link2="wx200_arm_B/upper_arm_link" reason="Adjacent" />
+
+    <!-- <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_A/shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_B/base_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_B/shoulder_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_bar_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/gripper_prop_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/forearm_link" link2="wx200_arm_A/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/gripper_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/left_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_bar_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_link" link2="wx200_arm_A/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/gripper_prop_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/left_finger_link" link2="wx200_arm_A/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/left_finger_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/left_finger_link" link2="wx200_arm_B/gripper_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/right_finger_link" link2="wx200_arm_A/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/right_finger_link" link2="wx200_arm_B/gripper_prop_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/right_finger_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/shoulder_link" link2="wx200_arm_A/upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_A/shoulder_link" link2="wx200_arm_B/base_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_A/shoulder_link" link2="wx200_arm_B/shoulder_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/base_link" link2="wx200_arm_B/shoulder_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_bar_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/gripper_prop_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/upper_arm_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/forearm_link" link2="wx200_arm_B/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/gripper_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/left_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_bar_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/gripper_prop_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_link" link2="wx200_arm_B/wrist_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/left_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/right_finger_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/gripper_prop_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/left_finger_link" link2="wx200_arm_B/right_finger_link" reason="Adjacent" />
+    <disable_collisions link1="wx200_arm_B/left_finger_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/right_finger_link" link2="wx200_arm_B/wrist_link" reason="Never" />
+    <disable_collisions link1="wx200_arm_B/shoulder_link" link2="wx200_arm_B/upper_arm_link" reason="Adjacent" /> -->
+</robot>

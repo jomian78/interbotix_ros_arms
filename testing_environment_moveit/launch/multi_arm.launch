@@ -1,0 +1,114 @@
+<launch>
+  <!-- args for robot_name and models -->
+  <arg name="robot_name"                        default=""/>
+  <arg name="arm_A_robot_model"                 default="wx200"/>
+  <arg name="arm_B_robot_model"                 default="wx200"/>
+
+  <!-- args for port names -->
+  <arg name="arm_A_port"                        default="/dev/widow_200_arm_A"/>
+  <arg name="arm_B_port"                        default="/dev/widow_200_arm_B"/>
+
+  <!-- args for operating modes -->
+  <arg name="arm_A_operating_mode"              default="position"/>
+  <arg name="arm_B_operating_mode"              default="position"/>
+
+  <!-- Relative displacement between arm A and arm B -->
+  <arg name="relative_x"                    default="0"/>
+  <arg name="relative_y"                    default="0.22"/>
+  <arg name="relative_z"                    default="0"/>
+  <arg name="relative_roll"                 default="0"/>
+  <arg name="relative_pitch"                default="0"/>
+  <arg name="relative_yaw"                  default="0"/>
+
+  <!-- world/visualization configurations for the testing environment -->
+  <arg name="use_default_rviz"                  default="false"/>
+  <arg name="load_moveit_world_frame"           default="true"/>
+
+  <!-- other configurations for the arms -->
+  <arg name="use_default_gripper_bar"           default="true"/>
+  <arg name="use_default_gripper_fingers"       default="true"/>
+  <arg name="use_external_gripper_urdf"         default="false"/>
+  <arg name="external_gripper_urdf_loc"         default=""/>
+  <arg name="arm_profile_velocity"              default="131"/>
+  <arg name="arm_profile_acceleration"          default="15"/>
+  <arg name="gripper_operating_mode"            default="position"/>
+  <arg name="gripper_profile_velocity"          default="0"/>
+  <arg name="gripper_profile_acceleration"      default="0"/>
+
+  <!-- NEED TO EDIT THIS -->
+  <!-- Loading the testing_environment description file -->
+  <include file="$(find testing_environment_moveit)/launch/multi_arm_description.launch">
+    <arg name="robot_name"                      value="$(arg robot_name)"/>
+    <arg name="arm_A_robot_model"               value="$(arg arm_A_robot_model)"/>
+    <arg name="arm_B_robot_model"               value="$(arg arm_B_robot_model)"/>
+
+    <arg name="relative_x"                      value="$(arg relative_x)"/>
+    <arg name="relative_y"                      value="$(arg relative_y)"/>
+    <arg name="relative_z"                      value="$(arg relative_z)"/>
+    <arg name="relative_roll"                   value="$(arg relative_roll)"/>
+    <arg name="relative_pitch"                  value="$(arg relative_pitch)"/>
+    <arg name="relative_yaw"                    value="$(arg relative_yaw)"/>
+
+    <arg name="use_joint_pub"                   value="true"/>
+    <arg name="use_default_gripper_bar"         value="$(arg use_default_gripper_bar)"/>
+    <arg name="use_default_gripper_fingers"     value="$(arg use_default_gripper_fingers)"/>
+    <arg name="use_external_gripper_urdf"       value="$(arg use_external_gripper_urdf)"/>
+    <arg name="external_gripper_urdf_loc"       value="$(arg external_gripper_urdf_loc)"/>
+    <arg name="load_gazebo_material"            value="false"/>
+    <arg name="load_moveit_world_frame"         value="$(arg load_moveit_world_frame)"/>
+    <arg name="use_default_rviz"                value="$(arg use_default_rviz)"/>
+  </include>
+
+  <!-- Arm A -->
+  <node
+    name="arm_node"
+    pkg="interbotix_sdk"
+    type="arm_node"
+    output="screen"
+    ns="$(arg robot_name)/wx200_arm_A">
+    <param name="robot_name"                    value="$(arg arm_A_robot_model)"/>
+    <param name="motor_configs"                 value="$(find interbotix_sdk)/config/"/>
+    <param name="port"                          value="$(arg arm_A_port)"/>
+    <param name="default_gripper_bar"           value="$(arg use_default_gripper_bar)"/>
+    <param name="default_gripper_fingers"       value="$(arg use_default_gripper_fingers)"/>
+    <param name="arm_operating_mode"            value="$(arg arm_A_operating_mode)"/>
+    <param name="arm_profile_velocity"          value="$(arg arm_profile_velocity)"/>
+    <param name="arm_profile_acceleration"      value="$(arg arm_profile_acceleration)"/>
+    <param name="gripper_operating_mode"        value="$(arg gripper_operating_mode)"/>
+    <param name="gripper_profile_velocity"      value="$(arg gripper_profile_velocity)"/>
+    <param name="gripper_profile_acceleration"  value="$(arg gripper_profile_acceleration)"/>
+    <param name="load_moveit_world_frame"       value="$(arg load_moveit_world_frame)"/>
+  </node>
+
+
+  <!-- Arm B -->
+  <node
+    name="arm_node"
+    pkg="interbotix_sdk"
+    type="arm_node"
+    output="screen"
+    ns="$(arg robot_name)/wx200_arm_B">
+    <param name="robot_name"                    value="$(arg arm_B_robot_model)"/>
+    <param name="motor_configs"                 value="$(find interbotix_sdk)/config/"/>
+    <param name="port"                          value="$(arg arm_B_port)"/>
+    <param name="default_gripper_bar"           value="$(arg use_default_gripper_bar)"/>
+    <param name="default_gripper_fingers"       value="$(arg use_default_gripper_fingers)"/>
+    <param name="arm_operating_mode"            value="$(arg arm_B_operating_mode)"/>
+    <param name="arm_profile_velocity"          value="$(arg arm_profile_velocity)"/>
+    <param name="arm_profile_acceleration"      value="$(arg arm_profile_acceleration)"/>
+    <param name="gripper_operating_mode"        value="$(arg gripper_operating_mode)"/>
+    <param name="gripper_profile_velocity"      value="$(arg gripper_profile_velocity)"/>
+    <param name="gripper_profile_acceleration"  value="$(arg gripper_profile_acceleration)"/>
+    <param name="load_moveit_world_frame"       value="$(arg load_moveit_world_frame)"/>
+  </node>
+
+  <!-- Combine published joint positions from each arm into one msg  -->
+  <node
+    name="combine_arm_joints"
+    pkg="testing_environment_moveit"
+    type="combine_arm_joints"
+    output="screen"
+    ns="$(arg robot_name)">
+  </node>
+
+</launch>

@@ -1,0 +1,104 @@
+# MoveIt-specific simulation settings
+moveit_sim_hw_interface:
+  joint_model_group: controllers_initial_group_
+  joint_model_group_pose: controllers_initial_pose_
+# Settings for ros_control control loop
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+    - wx200_arm_A_waist
+    - wx200_arm_A_shoulder
+    - wx200_arm_A_elbow
+    - wx200_arm_A_wrist_angle
+    - wx200_arm_A_wrist_rotate
+    - wx200_arm_A_gripper
+    - wx200_arm_A_left_finger
+    - wx200_arm_A_right_finger
+
+    - wx200_arm_B_waist
+    - wx200_arm_B_shoulder
+    - wx200_arm_B_elbow
+    - wx200_arm_B_wrist_angle
+    - wx200_arm_B_wrist_rotate
+    - wx200_arm_B_gripper
+    - wx200_arm_B_left_finger
+    - wx200_arm_A_right_finger
+
+  sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+controller_list:
+  - name: "wx200_arm_A/arm_controller"
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - wx200_arm_A_waist
+      - wx200_arm_A_shoulder
+      - wx200_arm_A_elbow
+      - wx200_arm_A_wrist_angle
+      - wx200_arm_A_wrist_rotate
+      - wx200_arm_A_gripper
+      - wx200_arm_A_left_finger
+      - wx200_arm_A_right_finger
+
+  # - name: "wx200_arm_A/gripper_controller"
+  #   action_ns: follow_joint_trajectory
+  #   default: True
+  #   type: FollowJointTrajectory
+  #   joints:
+  #     - wx200_arm_A_left_finger
+  #     - wx200_arm_A_right_finger
+
+
+  - name: "wx200_arm_B/arm_controller"
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - wx200_arm_B_waist
+      - wx200_arm_B_shoulder
+      - wx200_arm_B_elbow
+      - wx200_arm_B_wrist_angle
+      - wx200_arm_B_wrist_rotate
+      - wx200_arm_B_gripper
+      - wx200_arm_B_left_finger
+      - wx200_arm_B_right_finger
+
+  # - name: "wx200_arm_B/gripper_controller"
+  #   action_ns: follow_joint_trajectory
+  #   default: True
+  #   type: FollowJointTrajectory
+  #   joints:
+  #     - wx200_arm_B_left_finger
+  #     - wx200_arm_B_right_finger
+
+  - name: testing_environment
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - wx200_arm_A_waist
+      - wx200_arm_A_shoulder
+      - wx200_arm_A_elbow
+      - wx200_arm_A_wrist_angle
+      - wx200_arm_A_wrist_rotate
+      - wx200_arm_A_gripper
+      - wx200_arm_A_left_finger
+      - wx200_arm_A_right_finger
+
+      - wx200_arm_B_waist
+      - wx200_arm_B_shoulder
+      - wx200_arm_B_elbow
+      - wx200_arm_B_wrist_angle
+      - wx200_arm_B_wrist_rotate
+      - wx200_arm_B_gripper
+      - wx200_arm_B_left_finger
+      - wx200_arm_B_right_finger
