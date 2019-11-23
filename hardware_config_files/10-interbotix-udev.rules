@@ -1,0 +1,17 @@
+# Place this file in /etc/udev/rules.d/
+# Sets up rules to give permanent names to devices
+
+# Allow serial devices to be read by anyone
+KERNEL=="ttyUSB*", MODE:="0666"
+KERNEL=="ttyACM*", MODE:="0666"
+KERNEL=="js*", MODE:="0666"
+
+# OpenCM9.04C board
+ATTRS{idVendor}=="fff1", ATTRS{idProduct}=="ff48", ENV{ID_MM_DEVICE_IGNORE}="1", SYMLINK+="ttyDXL"
+
+# U2D2 board (also sets latency timer to 1ms for faster communication)
+# ATTRS{idVendor}=="0403" ATTRS{idProduct}=="6014", ENV{ID_MM_DEVICE_IGNORE}="1", ATTR{device/latency_timer}="1", SYMLINK+="ttyDXL"
+
+# New U2D2 board rules (for using multiple different robot arms --> matching these rules based on U2D2 serial number)
+ACTION=="add", ATTRS{serial}=="FT3R484D", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6014", ENV{ID_MM_DEVICE_IGNORE}="1", ATTR{device/latency_timer}="1", SYMLINK+="widow_200_arm_A"
+ACTION=="add", ATTRS{serial}=="FT3R4903", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6014", ENV{ID_MM_DEVICE_IGNORE}="1", ATTR{device/latency_timer}="1", SYMLINK+="widow_200_arm_B"
