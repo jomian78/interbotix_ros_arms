@@ -3,6 +3,7 @@
   <arg name="robot_model"                       default="$(arg robot_name)"/>
   <!-- <arg name="port"                              default="/dev/ttyDXL"/> -->
   <arg name="port"                              default="/dev/widow_200_arm_A"/>
+  <!-- <arg name="port"                              default="/dev/widow_200_arm_B"/> -->
   <arg name="use_default_rviz"                  default="true"/>
   <arg name="use_default_gripper_bar"           default="true"/>
   <arg name="use_default_gripper_fingers"       default="true"/>
