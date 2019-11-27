@@ -1,13 +1,6 @@
 controller_list:
   - name: fake_testing_environment_controller
     joints:
-      - wx200_arm_B_waist
-      - wx200_arm_B_shoulder
-      - wx200_arm_B_elbow
-      - wx200_arm_B_wrist_angle
-      - wx200_arm_B_wrist_rotate
-      - wx200_arm_B_gripper
-      - wx200_arm_B_left_finger
       - wx200_arm_A_waist
       - wx200_arm_A_shoulder
       - wx200_arm_A_elbow
@@ -15,3 +8,12 @@ controller_list:
       - wx200_arm_A_wrist_rotate
       - wx200_arm_A_gripper
       - wx200_arm_A_left_finger
+      - wx200_arm_A_right_finger
+      - wx200_arm_B_waist
+      - wx200_arm_B_shoulder
+      - wx200_arm_B_elbow
+      - wx200_arm_B_wrist_angle
+      - wx200_arm_B_wrist_rotate
+      - wx200_arm_B_gripper
+      - wx200_arm_B_left_finger
+      - wx200_arm_B_right_finger
