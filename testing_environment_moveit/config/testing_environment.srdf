@@ -9,53 +9,65 @@
     <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
     <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
     <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <virtual_joint name="world_joint" type="fixed" parent_frame="world" child_link="link0"/>
 
     <!-- Group definitions -->
     <group name="wx200_arm_A/arm_controller">
-        <joint name="wx200_arm_A_waist" />
-        <joint name="wx200_arm_A_shoulder" />
-        <joint name="wx200_arm_A_elbow" />
-        <joint name="wx200_arm_A_wrist_angle" />
-        <joint name="wx200_arm_A_wrist_rotate" />
-        <joint name="wx200_arm_A_gripper" />
-        <joint name="wx200_arm_A_left_finger" />
-        <joint name="wx200_arm_A_right_finger" />
+      <joint name="link0_joint_arm_A"/>
+      <joint name="wx200_arm_A_waist" />
+      <joint name="wx200_arm_A_shoulder" />
+      <joint name="wx200_arm_A_elbow" />
+      <joint name="wx200_arm_A_wrist_angle" />
+      <joint name="wx200_arm_A_wrist_rotate" />
+      <joint name="wx200_arm_A_ee_arm" />
+    </group>
+
+    <group name="wx200_arm_A/gripper_controller">
+      <link name="wx200_arm_A/gripper_bar_link" />
+      <link name="wx200_arm_A/fingers_link" />
+      <link name="wx200_arm_A/ee_gripper_link" />
+      <link name="wx200_arm_A/left_finger_link" />
+      <link name="wx200_arm_A/right_finger_link" />
     </group>
 
     <group name="wx200_arm_B/arm_controller">
-        <joint name="wx200_arm_B_waist" />
-        <joint name="wx200_arm_B_shoulder" />
-        <joint name="wx200_arm_B_elbow" />
-        <joint name="wx200_arm_B_wrist_angle" />
-        <joint name="wx200_arm_B_wrist_rotate" />
-        <joint name="wx200_arm_B_gripper" />
-        <joint name="wx200_arm_B_left_finger" />
-        <joint name="wx200_arm_B_right_finger" />
+      <joint name="link0_joint_arm_B"/>
+      <joint name="wx200_arm_B_waist" />
+      <joint name="wx200_arm_B_shoulder" />
+      <joint name="wx200_arm_B_elbow" />
+      <joint name="wx200_arm_B_wrist_angle" />
+      <joint name="wx200_arm_B_wrist_rotate" />
+      <joint name="wx200_arm_B_ee_arm" />
+    </group>
+
+    <group name="wx200_arm_B/gripper_controller">
+      <link name="wx200_arm_B/gripper_bar_link" />
+      <link name="wx200_arm_B/fingers_link" />
+      <link name="wx200_arm_B/ee_gripper_link" />
+      <link name="wx200_arm_B/left_finger_link" />
+      <link name="wx200_arm_B/right_finger_link" />
     </group>
 
     <group name="testing_environment">
+      <joint name="world_joint"/>
       <group name="wx200_arm_A/arm_controller"/>
+      <group name="wx200_arm_A/gripper_controller"/>
       <group name="wx200_arm_B/arm_controller"/>
+      <group name="wx200_arm_B/gripper_controller"/>
     </group>
 
     <!-- Group states -->
     <group_state name="testing_environment_home" group="testing_environment">
-        <joint name="wx200_arm_A_elbow" value="0" />
-        <joint name="wx200_arm_A_gripper" value="0" />
-        <joint name="wx200_arm_A_left_finger" value="0" />
-        <joint name="wx200_arm_A_right_finger" value="0" />
-        <joint name="wx200_arm_A_shoulder" value="0" />
-        <joint name="wx200_arm_A_waist" value="0" />
-        <joint name="wx200_arm_A_wrist_angle" value="0" />
-        <joint name="wx200_arm_A_wrist_rotate" value="0" />
-        <joint name="wx200_arm_B_elbow" value="0" />
-        <joint name="wx200_arm_B_gripper" value="0" />
-        <joint name="wx200_arm_B_left_finger" value="0" />
-        <joint name="wx200_arm_B_right_finger" value="0" />
-        <joint name="wx200_arm_B_shoulder" value="0" />
-        <joint name="wx200_arm_B_waist" value="0" />
-        <joint name="wx200_arm_B_wrist_angle" value="0" />
-        <joint name="wx200_arm_B_wrist_rotate" value="0" />
+      <joint name="wx200_arm_A_waist" value="0" />
+      <joint name="wx200_arm_A_shoulder" value="0"/>
+      <joint name="wx200_arm_A_elbow" value="0"/>
+      <joint name="wx200_arm_A_wrist_angle" value="0" />
+      <joint name="wx200_arm_A_wrist_rotate" value="0" />
+      <joint name="wx200_arm_B_waist" value="0" />
+      <joint name="wx200_arm_B_shoulder" value="0"/>
+      <joint name="wx200_arm_B_elbow" value="0"/>
+      <joint name="wx200_arm_B_wrist_angle" value="0" />
+      <joint name="wx200_arm_B_wrist_rotate" value="0" />
     </group_state>
 
     <group_state name="arm_A_home" group="wx200_arm_A/arm_controller">
@@ -64,9 +76,6 @@
         <joint name="wx200_arm_A_elbow" value="0"/>
         <joint name="wx200_arm_A_wrist_angle" value="0" />
         <joint name="wx200_arm_A_wrist_rotate" value="0" />
-        <joint name="wx200_arm_A_gripper" value="0" />
-        <joint name="wx200_arm_A_left_finger" value="0" />
-        <joint name="wx200_arm_A_right_finger" value="0" />
     </group_state>
 
     <group_state name="arm_A_upright" group="wx200_arm_A/arm_controller">
@@ -75,9 +84,6 @@
         <joint name="wx200_arm_A_waist" value="0" />
         <joint name="wx200_arm_A_wrist_angle" value="0" />
         <joint name="wx200_arm_A_wrist_rotate" value="0" />
-        <joint name="wx200_arm_A_gripper" value="0" />
-        <joint name="wx200_arm_A_left_finger" value="0" />
-        <joint name="wx200_arm_A_right_finger" value="0" />
     </group_state>
 
     <group_state name="arm_A_sleep" group="wx200_arm_A/arm_controller">
@@ -86,9 +92,6 @@
         <joint name="wx200_arm_A_waist" value="0" />
         <joint name="wx200_arm_A_wrist_angle" value="-0.8" />
         <joint name="wx200_arm_A_wrist_rotate" value="0" />
-        <joint name="wx200_arm_A_gripper" value="0" />
-        <joint name="wx200_arm_A_left_finger" value="0" />
-        <joint name="wx200_arm_A_right_finger" value="0" />
     </group_state>
 
     <group_state name="arm_B_home" group="wx200_arm_B/arm_controller">
@@ -97,9 +100,6 @@
         <joint name="wx200_arm_B_elbow" value="0"/>
         <joint name="wx200_arm_B_wrist_angle" value="0" />
         <joint name="wx200_arm_B_wrist_rotate" value="0" />
-        <joint name="wx200_arm_B_gripper" value="0" />
-        <joint name="wx200_arm_B_left_finger" value="0" />
-        <joint name="wx200_arm_B_right_finger" value="0" />
     </group_state>
 
     <group_state name="arm_B_upright" group="wx200_arm_B/arm_controller">
@@ -108,9 +108,6 @@
         <joint name="wx200_arm_B_waist" value="0" />
         <joint name="wx200_arm_B_wrist_angle" value="0" />
         <joint name="wx200_arm_B_wrist_rotate" value="0" />
-        <joint name="wx200_arm_B_gripper" value="0" />
-        <joint name="wx200_arm_B_left_finger" value="0" />
-        <joint name="wx200_arm_B_right_finger" value="0" />
     </group_state>
 
     <group_state name="arm_B_sleep" group="wx200_arm_B/arm_controller">
@@ -119,10 +116,10 @@
         <joint name="wx200_arm_B_waist" value="0" />
         <joint name="wx200_arm_B_wrist_angle" value="-0.8" />
         <joint name="wx200_arm_B_wrist_rotate" value="0" />
-        <joint name="wx200_arm_B_gripper" value="0" />
-        <joint name="wx200_arm_B_left_finger" value="0" />
-        <joint name="wx200_arm_B_right_finger" value="0" />
     </group_state>
+
+    <end_effector name="wx200_arm_A_gripper" parent_link="wx200_arm_A/ee_arm_link" group="wx200_arm_A/gripper_controller" />
+    <end_effector name="wx200_arm_B_gripper" parent_link="wx200_arm_B/ee_arm_link" group="wx200_arm_B/gripper_controller" />
 
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_A/shoulder_link" reason="Adjacent" />

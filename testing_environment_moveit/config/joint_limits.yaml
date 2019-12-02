@@ -7,11 +7,6 @@ joint_limits:
     max_velocity: 3.14159265359
     has_acceleration_limits: false
     max_acceleration: 0
-  wx200_arm_A_gripper:
-    has_velocity_limits: true
-    max_velocity: 3.14159265359
-    has_acceleration_limits: false
-    max_acceleration: 0
   wx200_arm_A_left_finger:
     has_velocity_limits: true
     max_velocity: 1
@@ -43,11 +38,6 @@ joint_limits:
     has_acceleration_limits: false
     max_acceleration: 0
   wx200_arm_B_elbow:
-    has_velocity_limits: true
-    max_velocity: 3.14159265359
-    has_acceleration_limits: false
-    max_acceleration: 0
-  wx200_arm_B_gripper:
     has_velocity_limits: true
     max_velocity: 3.14159265359
     has_acceleration_limits: false

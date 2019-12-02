@@ -44,17 +44,14 @@ controller_list:
       - wx200_arm_A_elbow
       - wx200_arm_A_wrist_angle
       - wx200_arm_A_wrist_rotate
-      - wx200_arm_A_gripper
+
+  - name: "wx200_arm_A/gripper_controller"
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
       - wx200_arm_A_left_finger
       - wx200_arm_A_right_finger
-
-  # - name: "wx200_arm_A/gripper_controller"
-  #   action_ns: follow_joint_trajectory
-  #   default: True
-  #   type: FollowJointTrajectory
-  #   joints:
-  #     - wx200_arm_A_left_finger
-  #     - wx200_arm_A_right_finger
 
 
   - name: "wx200_arm_B/arm_controller"
@@ -67,17 +64,14 @@ controller_list:
       - wx200_arm_B_elbow
       - wx200_arm_B_wrist_angle
       - wx200_arm_B_wrist_rotate
-      - wx200_arm_B_gripper
+
+  - name: "wx200_arm_B/gripper_controller"
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
       - wx200_arm_B_left_finger
       - wx200_arm_B_right_finger
-
-  # - name: "wx200_arm_B/gripper_controller"
-  #   action_ns: follow_joint_trajectory
-  #   default: True
-  #   type: FollowJointTrajectory
-  #   joints:
-  #     - wx200_arm_B_left_finger
-  #     - wx200_arm_B_right_finger
 
   - name: testing_environment
     action_ns: follow_joint_trajectory

@@ -30,39 +30,16 @@
   <!-- Call the init_widow_200 macro and give it the "arm B" namespace-->
   <xacro:init_widow_200 namespace="arm_B"/>
 
-  <!-- Create a prismatic joint between arm A and arm B (arm A will be the parent)-->
-  <!-- <xacro:macro name="arm_A_to_arm_B_joint" params="arm_A_robot_model arm_B_robot_model relative_x relative_y relative_z relative_roll relative_pitch relative_yaw">
-    <joint name="${arm_A_robot_model}_arm_A_to_${arm_B_robot_model}_arm_B" type="prismatic">
-      <parent link="${arm_A_robot_model}_arm_A/base_link"/>
-      <child link="${arm_B_robot_model}_arm_B/base_link"/>
-      <limit effort="1000.0" lower="0.01" upper="1.0" velocity="0.5"/>
-      <origin xyz="${relative_x} ${relative_y} ${relative_z}" rpy="${relative_roll} ${relative_pitch} ${relative_yaw}"/>
-      <axis xyz="0 1 0"/>
-    </joint>
-  </xacro:macro> -->
-
-  <!-- Call the macro for the prismatic joint between arm A and arm B -->
-  <!-- <xacro:arm_A_to_arm_B_joint arm_A_robot_model="$(arg arm_A_robot_model)" arm_B_robot_model="$(arg arm_B_robot_model)" relative_x="$(arg relative_x)" relative_y="$(arg relative_y)" relative_z="$(arg relative_z)" relative_roll="$(arg relative_roll)" relative_pitch="$(arg relative_pitch)" relative_yaw="$(arg relative_yaw)"/> -->
-
-  <!-- Add a world link before arm_A/base_link if using Moveit -->
-  <!-- <xacro:if value="$(arg moveit)">
-    <link name="world"/>
-    <joint name="world_to_arm_A_base_link" type="fixed">
-      <parent link="world"/>
-      <child link="$(arg arm_A_robot_model)_arm_A/base_link"/>
-    </joint>
-  </xacro:if> -->
-
   <!-- world link -->
-  <link name="world"/>
+  <!-- <link name="world"/> -->
 
   <!-- dummy link -->
   <link name="link0"/>
-  <joint name="world_joint" type="fixed">
+  <!-- <joint name="world_joint" type="fixed">
     <parent link="world"/>
     <child link="link0"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
+  </joint> -->
 
   <!-- Arm A joint -->
   <joint name="link0_joint_arm_A" type="fixed">
