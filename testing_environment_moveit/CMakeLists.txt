@@ -5,15 +5,20 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
   message_filters
+  moveit_core
+  moveit_ros_planning
+  moveit_ros_planning_interface
+  moveit_visual_tools
 )
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
+find_package(Eigen3 REQUIRED)
 
 catkin_package()
 # CATKIN_DEPENDS roscpp sensor_msgs message_filters
 
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
 ## Declare a C++ executable
 ## Specify libraries to link a library or executable target against
@@ -22,6 +27,12 @@ add_executable(combine_arm_joints src/combine_arm_joints.cpp)
 add_dependencies(combine_arm_joints ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(combine_arm_joints ${catkin_LIBRARIES})
+
+# motion_plan_test executable
+add_executable(motion_plan_test src/motion_plan_test.cpp)
+add_dependencies(motion_plan_test ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(motion_plan_test ${catkin_LIBRARIES})
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
