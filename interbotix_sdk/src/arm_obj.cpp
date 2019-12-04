@@ -834,6 +834,8 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
     for (auto const& name:msg.joint_names)
     {
       joint_order[name] = cntr;
+      // ROS_WARN("joint_order[%s] = %d", name.c_str(), joint_order[name]);
+      // ROS_WARN("Marker");
       cntr++;
     }
     jnt_tra_msg.joint_names.clear();
@@ -847,15 +849,21 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
     {
       trajectory_msgs::JointTrajectoryPoint jnt_tra_point_msg;
       jnt_tra_point_msg.time_from_start = msg.points.at(cntr).time_from_start;
-      for (auto const& joint:joints)
+      // for (auto const& joint:joints)
+      for (auto const& name:msg.joint_names)
       {
-        ROS_WARN("joint_name: %s", joint.name.c_str());
-        ROS_WARN("joint_order index: %d", joint_order[joint.name]);
-        ROS_WARN("joint_position: %f", msg.points.at(cntr).positions.at(joint_order[joint.name]));
+        // ROS_WARN("joint_name: %s", name.c_str());
+        // ROS_WARN("joint_order index: %d", joint_order[name]);
+        // ROS_WARN("joint_position: %f", msg.points.at(cntr).positions.at(joint_order[name]));
 
-        jnt_tra_point_msg.positions.push_back(msg.points.at(cntr).positions.at(joint_order[joint.name]));
-        jnt_tra_point_msg.velocities.push_back(msg.points.at(cntr).velocities.at(joint_order[joint.name]));
-        jnt_tra_point_msg.accelerations.push_back(msg.points.at(cntr).accelerations.at(joint_order[joint.name]));
+        // jnt_tra_point_msg.positions.push_back(msg.points.at(cntr).positions.at(joint_order[joint.name]));
+        jnt_tra_point_msg.positions.push_back(msg.points.at(cntr).positions.at(joint_order[name]));
+
+        // jnt_tra_point_msg.velocities.push_back(msg.points.at(cntr).velocities.at(joint_order[joint.name]));
+        jnt_tra_point_msg.velocities.push_back(msg.points.at(cntr).velocities.at(joint_order[name]));
+
+        // jnt_tra_point_msg.accelerations.push_back(msg.points.at(cntr).accelerations.at(joint_order[joint.name]));
+        jnt_tra_point_msg.accelerations.push_back(msg.points.at(cntr).accelerations.at(joint_order[name]));
       }
       jnt_tra_msg.points.push_back(jnt_tra_point_msg);
       cntr++;
@@ -863,13 +871,12 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
     // Make sure that the initial joint positions in the trajectory match the current
     // joint states (with an arbitrary error less than 0.1 rad)
     size_t itr = 0;
-    // ROS_WARN("jnt_trajectory size: %d", jnt_tra_msg.points.size());
     for (auto const& joint:joints)
     {
       // ROS_WARN("jnt_tra_msg_name[%d]: %s", itr, jnt_tra_msg.joint_names[itr].c_str());
       // ROS_WARN("jnt_tra_msg_position_point0: %f", jnt_tra_msg.points.at(0).positions.at(itr));
       // ROS_WARN("jnt_tra_msg_position_endpoint: %f", jnt_tra_msg.points.at(jnt_tra_msg.points.size() - 1).positions.at(itr));
-
+      //
       // ROS_WARN("actual_joint_name: %s", joint_states.name.at(itr).c_str());
       // ROS_WARN("actual_joint_position: %f", joint_states.position.at(itr));
 
@@ -877,9 +884,9 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
       {
         if (!(fabs(jnt_tra_msg.points[0].positions.at(itr) - joint_states.position.at(itr)) < 0.1))
         {
-          // ROS_WARN("%s motor is not at the correct initial state.", joint_states.name.at(itr).c_str());
+          ROS_WARN("%s motor is not at the correct initial state.", joint_states.name.at(itr).c_str());
           // ROS_WARN("jnt_tra_msg_name: %s", jnt_tra_msg.joint_names[itr].c_str());
-          // ROS_WARN("Expected state: %f, Actual State: %f.", jnt_tra_msg.points.at(0).positions.at(itr), joint_states.position.at(itr));
+          ROS_WARN("Expected state: %f, Actual State: %f.", jnt_tra_msg.points.at(0).positions.at(itr), joint_states.position.at(itr));
         }
         itr++;
       }
