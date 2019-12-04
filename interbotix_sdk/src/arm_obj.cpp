@@ -833,16 +833,27 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
 
     for (auto const& name:msg.joint_names)
     {
-      joint_order[name] = cntr;
-      // ROS_WARN("joint_order[%s] = %d", name.c_str(), joint_order[name]);
-      // ROS_WARN("Marker");
+      if (name == "wx200_arm_A_elbow" || name == "wx200_arm_B_elbow"){
+        joint_order[name] = 2;
+      }
+      else if (name == "wx200_arm_A_waist" || name == "wx200_arm_B_waist"){
+        joint_order[name] = 0;
+      }
+      else{
+        joint_order[name] = cntr;
+      }
+      // joint_order[name] = cntr;
+      ROS_WARN("joint_order[%s] = %d", name.c_str(), joint_order[name]);
+      ROS_WARN("Marker");
       cntr++;
     }
     jnt_tra_msg.joint_names.clear();
     jnt_tra_msg.points.clear();
     jnt_tra_msg.header = msg.header;
-    for (auto const& joint:joints)
-      jnt_tra_msg.joint_names.push_back(joint.name);
+    // for (auto const& joint:joints)
+    for (auto const& name:msg.joint_names)
+      jnt_tra_msg.joint_names.push_back(name);
+      // jnt_tra_msg.joint_names.push_back(joint.name);
 
     cntr = 0;
     while(cntr < msg.points.size())
@@ -871,7 +882,8 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
     // Make sure that the initial joint positions in the trajectory match the current
     // joint states (with an arbitrary error less than 0.1 rad)
     size_t itr = 0;
-    for (auto const& joint:joints)
+    // for (auto const& joint:joints)
+    for (auto const& name:msg.joint_names)
     {
       // ROS_WARN("jnt_tra_msg_name[%d]: %s", itr, jnt_tra_msg.joint_names[itr].c_str());
       // ROS_WARN("jnt_tra_msg_position_point0: %f", jnt_tra_msg.points.at(0).positions.at(itr));
@@ -880,12 +892,12 @@ void RobotArm::arm_joint_trajectory_msg_callback(const trajectory_msgs::JointTra
       // ROS_WARN("actual_joint_name: %s", joint_states.name.at(itr).c_str());
       // ROS_WARN("actual_joint_position: %f", joint_states.position.at(itr));
 
-      if (joint.name != "gripper")
+      // if (joint.name != "gripper")
+      if (name != "gripper")
       {
         if (!(fabs(jnt_tra_msg.points[0].positions.at(itr) - joint_states.position.at(itr)) < 0.1))
         {
           ROS_WARN("%s motor is not at the correct initial state.", joint_states.name.at(itr).c_str());
-          // ROS_WARN("jnt_tra_msg_name: %s", jnt_tra_msg.joint_names[itr].c_str());
           ROS_WARN("Expected state: %f, Actual State: %f.", jnt_tra_msg.points.at(0).positions.at(itr), joint_states.position.at(itr));
         }
         itr++;
