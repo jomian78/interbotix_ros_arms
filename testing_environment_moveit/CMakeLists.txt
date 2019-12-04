@@ -34,6 +34,12 @@ add_dependencies(motion_plan_test ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(motion_plan_test ${catkin_LIBRARIES})
 
+# move_group_test executable
+add_executable(move_group_test src/move_group_test.cpp)
+add_dependencies(move_group_test ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(move_group_test ${catkin_LIBRARIES})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
