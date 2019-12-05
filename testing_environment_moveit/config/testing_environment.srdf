@@ -56,6 +56,7 @@
       <group name="wx200_arm_B/gripper_controller"/>
     </group>
 
+
     <!-- Group states -->
     <group_state name="testing_environment_home" group="testing_environment">
       <joint name="wx200_arm_A_waist" value="0" />
@@ -118,8 +119,9 @@
         <joint name="wx200_arm_B_wrist_rotate" value="0" />
     </group_state>
 
-    <end_effector name="wx200_arm_A_gripper" parent_link="wx200_arm_A/ee_arm_link" group="wx200_arm_A/gripper_controller" />
-    <end_effector name="wx200_arm_B_gripper" parent_link="wx200_arm_B/ee_arm_link" group="wx200_arm_B/gripper_controller" />
+    <end_effector name="wx200_arm_A_gripper" parent_link="wx200_arm_A/ee_arm_link" group="wx200_arm_A/gripper_controller"/>
+    <end_effector name="wx200_arm_B_gripper" parent_link="wx200_arm_B/ee_arm_link" group="wx200_arm_B/gripper_controller"/>
+
 
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="wx200_arm_A/base_link" link2="wx200_arm_A/shoulder_link" reason="Adjacent" />

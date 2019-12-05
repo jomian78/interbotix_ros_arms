@@ -8,11 +8,11 @@
 #   kinematics_solver_attempts: 3
 #   position_only_ik: true
 
-testing_environment:
-  kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
-  kinematics_solver_timeout: 0.005
-  solve_type: Speed
-  position_only_ik: true
+# testing_environment:
+#   kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+#   kinematics_solver_timeout: 0.005
+#   solve_type: Speed
+#   position_only_ik: true
 
 # Position-only-ik and orientation-only-ik work even if position_only_ik is not set below
 
@@ -22,3 +22,15 @@ testing_environment:
 #   kinematics_solver_timeout: 0.005
 #   kinematics_solver_attempts: 3
   # position_only_ik: true
+
+wx200_arm_A/arm_controller:
+  kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+  kinematics_solver_timeout: 0.005
+  solve_type: Speed
+  position_only_ik: true
+
+wx200_arm_B/arm_controller:
+  kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+  kinematics_solver_timeout: 0.005
+  solve_type: Speed
+  position_only_ik: true
