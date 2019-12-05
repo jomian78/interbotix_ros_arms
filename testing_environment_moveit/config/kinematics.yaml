@@ -34,3 +34,15 @@ wx200_arm_B/arm_controller:
   kinematics_solver_timeout: 0.005
   solve_type: Speed
   position_only_ik: true
+
+# wx200_arm_A/gripper_controller:
+#   kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+#   kinematics_solver_timeout: 0.005
+#   solve_type: Speed
+#   position_only_ik: true
+#
+# wx200_arm_B/gripper_controller:
+#   kinematics_solver: trac_ik_kinematics_plugin/TRAC_IKKinematicsPlugin
+#   kinematics_solver_timeout: 0.005
+#   solve_type: Speed
+#   position_only_ik: true
