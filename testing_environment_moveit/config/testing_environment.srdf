@@ -71,6 +71,19 @@
       <joint name="wx200_arm_B_wrist_rotate" value="0" />
     </group_state>
 
+    <group_state name="testing_environment_sleep" group="testing_environment">
+      <joint name="wx200_arm_A_waist" value="0" />
+      <joint name="wx200_arm_A_shoulder" value="-1.88"/>
+      <joint name="wx200_arm_A_elbow" value="-1.55"/>
+      <joint name="wx200_arm_A_wrist_angle" value="-0.8" />
+      <joint name="wx200_arm_A_wrist_rotate" value="0" />
+      <joint name="wx200_arm_B_waist" value="0" />
+      <joint name="wx200_arm_B_shoulder" value="-1.88"/>
+      <joint name="wx200_arm_B_elbow" value="-1.55"/>
+      <joint name="wx200_arm_B_wrist_angle" value="-0.8" />
+      <joint name="wx200_arm_B_wrist_rotate" value="0" />
+    </group_state>
+
     <group_state name="arm_A_home" group="wx200_arm_A/arm_controller">
         <joint name="wx200_arm_A_elbow" value="0"/>
         <joint name="wx200_arm_A_shoulder" value="0"/>
