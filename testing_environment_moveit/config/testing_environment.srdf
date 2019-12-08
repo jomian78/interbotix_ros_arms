@@ -56,7 +56,6 @@
       <group name="wx200_arm_B/gripper_controller"/>
     </group>
 
-
     <!-- Group states -->
     <group_state name="testing_environment_home" group="testing_environment">
       <joint name="wx200_arm_A_waist" value="0" />
