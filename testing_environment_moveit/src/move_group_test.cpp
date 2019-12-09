@@ -18,6 +18,22 @@ int main(int argc, char** argv)
   spinner.start();
   ros::Duration(3.0).sleep(); // wait for everything to initialize
 
+
+  static const std::string PLANNING_GROUP = "testing_environment";
+  moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
+
+  // for adding and removing collision objects
+  moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+
+  //MoveIt Visual tools
+  namespace rvt = rviz_visual_tools;
+  moveit_visual_tools::MoveItVisualTools visual_tools("link0");
+  visual_tools.deleteAllMarkers();
+  Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();
+  text_pose.translation().z() = 0.7;
+  visual_tools.publishText(text_pose, "MoveGroupInterface Demo", rvt::WHITE, rvt::XLARGE);
+  visual_tools.trigger();
+
   /************************ CollisionObject Test ******************************/
   // moveit_msgs::CollisionObject collision_object;
   // collision_object.header.frame_id = move_group.getPlanningFrame();
@@ -40,39 +56,68 @@ int main(int argc, char** argv)
   // collision_object.primitives.push_back(primitive);
   // collision_object.primitive_poses.push_back(box_pose);
   // collision_object.operation = collision_object.ADD;
-  //
-  // std::vector<moveit_msgs::CollisionObject> collision_objects;
+
+  // table A
+  moveit_msgs::CollisionObject wx200_arm_A_table;
+  wx200_arm_A_table.header.frame_id = move_group.getPlanningFrame();
+
+  wx200_arm_A_table.id = "wx200_arm_A_table";
+
+  shape_msgs::SolidPrimitive table_A;
+  table_A.type = table_A.BOX;
+  table_A.dimensions.resize(3);
+  table_A.dimensions[0] = 2.0;
+  table_A.dimensions[1] = 2.0;
+  table_A.dimensions[2] = 0.01;
+
+  geometry_msgs::Pose table_arm_A_pose;
+  table_arm_A_pose.orientation.w = 1.0;
+  table_arm_A_pose.position.x = 0.0;
+  table_arm_A_pose.position.y = 0.0;
+  table_arm_A_pose.position.z = -0.005;
+
+  wx200_arm_A_table.primitives.push_back(table_A);
+  wx200_arm_A_table.primitive_poses.push_back(table_arm_A_pose);
+  wx200_arm_A_table.operation = wx200_arm_A_table.ADD;
+
+  // table B
+  moveit_msgs::CollisionObject wx200_arm_B_table;
+  wx200_arm_B_table.header.frame_id = move_group.getPlanningFrame();
+
+  wx200_arm_B_table.id = "wx200_arm_B_table";
+
+  shape_msgs::SolidPrimitive table_B;
+  table_B.type = table_B.BOX;
+  table_B.dimensions.resize(3);
+  table_B.dimensions[0] = 2.0;
+  table_B.dimensions[1] = 2.0;
+  table_B.dimensions[2] = 0.01;
+
+  geometry_msgs::Pose table_arm_B_pose;
+  table_arm_B_pose.orientation.w = 1.0;
+  table_arm_B_pose.position.x = 0.0;
+  table_arm_B_pose.position.y = 0.22;
+  table_arm_B_pose.position.z = -0.005;
+
+  wx200_arm_B_table.primitives.push_back(table_B);
+  wx200_arm_B_table.primitive_poses.push_back(table_arm_B_pose);
+  wx200_arm_B_table.operation = wx200_arm_B_table.ADD;
+
+  std::vector<moveit_msgs::CollisionObject> collision_objects;
+  collision_objects.push_back(wx200_arm_A_table);
+  collision_objects.push_back(wx200_arm_B_table);
   // collision_objects.push_back(collision_object);
-  //
-  // planning_scene_interface.addCollisionObjects(collision_objects);
+
+  planning_scene_interface.addCollisionObjects(collision_objects);
 
 
   // /********************* MoveGroupInterface test *****************************/
-
-  static const std::string PLANNING_GROUP = "testing_environment";
-  moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
-
-  // for adding and removing collision objects
-  moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-
   const robot_state::JointModelGroup* joint_model_group =
     move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
-
 
   // print out end-effector link for this group
   // move_group.setEndEffectorLink("wx200_arm_A/ee_arm_link");
   // ROS_INFO("End effector link: %s", move_group.getEndEffectorLink().c_str());
-
-  //MoveIt Visual tools
-  namespace rvt = rviz_visual_tools;
-  // moveit_visual_tools::MoveItVisualTools visual_tools("wx200_arm_A/base_link");
-  moveit_visual_tools::MoveItVisualTools visual_tools("link0");
-  visual_tools.deleteAllMarkers();
-  // visual_tools.loadRemoteControl();
-  Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();
-  text_pose.translation().z() = 0.7;
-  visual_tools.publishText(text_pose, "MoveGroupInterface Demo", rvt::WHITE, rvt::XLARGE);
-  visual_tools.trigger();
 
   // arm A pose
   geometry_msgs::Pose test_pose1;
@@ -194,7 +239,7 @@ int main(int argc, char** argv)
   current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
 
   // new pose in joint space
-  joint_group_positions[1] = 1.0;
+  // joint_group_positions[1] = 1.0;
   joint_group_positions[7] = 1.0;
 
   move_group.setJointValueTarget(joint_group_positions);
