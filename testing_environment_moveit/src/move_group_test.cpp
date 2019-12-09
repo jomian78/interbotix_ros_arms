@@ -16,6 +16,7 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   ros::AsyncSpinner spinner(1);
   spinner.start();
+  ros::Duration(3.0).sleep(); // wait for everything to initialize
 
   /************************ CollisionObject Test ******************************/
   // moveit_msgs::CollisionObject collision_object;
@@ -49,6 +50,7 @@ int main(int argc, char** argv)
   // /********************* MoveGroupInterface test *****************************/
 
   static const std::string PLANNING_GROUP = "testing_environment";
+  // static const std::string PLANNING_GROUP = "wx200_arm_B/arm_controller";
   moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
 
   // for adding and removing collision objects
@@ -58,8 +60,8 @@ int main(int argc, char** argv)
     move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
 
   // print out end-effector link for this group
+  // move_group.setEndEffectorLink("wx200_arm_A/ee_arm_link");
   // ROS_INFO("End effector link: %s", move_group.getEndEffectorLink().c_str());
-  // ROS_INFO("End effector: %s", move_group.getEndEffector().c_str());
 
   geometry_msgs::Pose test_pose1;
   test_pose1.orientation.w = 1.0;
@@ -72,7 +74,7 @@ int main(int argc, char** argv)
   test_pose2.orientation.w = 1.0;
   test_pose2.position.x = 0.0;
   test_pose2.position.y = 0.22;
-  test_pose2.position.z = 0.45;
+  test_pose2.position.z = 0.35;
   move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
@@ -81,56 +83,44 @@ int main(int argc, char** argv)
 
   ROS_INFO("Visualizing test_pose 1 (pose goal) %s", success ? "" : "FAILED");
 
-  // move_group.asyncMove();
   move_group.move();
 
-  ros::Duration(3.0).sleep(); // wait for plan to finish
+  geometry_msgs::Pose test_pose3;
+  test_pose3.orientation.w = 1.0;
+  test_pose3.position.x = 0.0;
+  test_pose3.position.y = 0.0;
+  test_pose3.position.z = 0.35;
+  move_group.setPoseTarget(test_pose3, "wx200_arm_A/ee_arm_link");
 
-  /********************* Both move groups test ********************************/
-  // static const std::string PLANNING_GROUP_A = "wx200_arm_A/arm_controller";
-  // static const std::string PLANNING_GROUP_B = "wx200_arm_B/arm_controller";
-  //
-  // moveit::planning_interface::MoveGroupInterface move_group_A(PLANNING_GROUP_A);
-  // moveit::planning_interface::MoveGroupInterface move_group_B(PLANNING_GROUP_B);
-  //
-  // // for adding and removing collision objects
-  // moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
-  //
-  // const robot_state::JointModelGroup* joint_model_group_A =
-  //   move_group_A.getCurrentState()->getJointModelGroup(PLANNING_GROUP_A);
-  // const robot_state::JointModelGroup* joint_model_group_B =
-  //   move_group_B.getCurrentState()->getJointModelGroup(PLANNING_GROUP_B);
-  //
-  // geometry_msgs::Pose test_pose1;
-  // test_pose1.orientation.w = 1.0;
-  // test_pose1.position.x = 0.2;
-  // test_pose1.position.y = 0.0;
-  // test_pose1.position.z = 0.1;
-  // move_group_A.setPoseTarget(test_pose1);
-  //
-  // geometry_msgs::Pose test_pose2;
-  // test_pose2.orientation.w = 1.0;
-  // test_pose2.position.x = 0.2;
-  // test_pose2.position.y = 0.22;
-  // test_pose2.position.z = 0.45;
-  // move_group_B.setPoseTarget(test_pose2);
-  //
-  // moveit::planning_interface::MoveGroupInterface::Plan my_plan_A;
-  // moveit::planning_interface::MoveGroupInterface::Plan my_plan_B;
-  //
-  // bool success_A = (move_group_A.plan(my_plan_A) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  // bool success_B = (move_group_B.plan(my_plan_B) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  //
-  // ROS_INFO("Visualizing test_pose 1 (pose goal) %s", success_A ? "" : "FAILED");
-  // ROS_INFO("Visualizing test_pose 2 (pose goal) %s", success_B ? "" : "FAILED");
-  //
-  // // move_group_A.setPlanningTime(10.0);
-  // // move_group_B.setPlanningTime(10.0);
-  //
-  // move_group_A.move();
-  // move_group_B.move();
-  //
-  // ros::Duration(3.0).sleep(); // wait for plan to finish
+  geometry_msgs::Pose test_pose4;
+  test_pose4.orientation.w = 1.0;
+  test_pose4.position.x = 0.0;
+  test_pose4.position.y = 0.22;
+  test_pose4.position.z = 0.45;
+  move_group.setPoseTarget(test_pose4, "wx200_arm_B/ee_arm_link");
+
+  move_group.move();
+
+  move_group.setPoseTarget(test_pose1, "wx200_arm_A/ee_arm_link");
+  move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
+  move_group.move();
+
+  // int cntr = 1;
+  // while(ros::ok()){
+  //   if (cntr % 2 == 1){
+  //     move_group.setPoseTarget(test_pose1, "wx200_arm_A/ee_arm_link");
+  //     move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
+  //   }
+  //   else{
+  //     move_group.setPoseTarget(test_pose3, "wx200_arm_A/ee_arm_link");
+  //     move_group.setPoseTarget(test_pose4, "wx200_arm_B/ee_arm_link");
+  //   }
+  //   move_group.move();
+  //   cntr++;
+  // }
+
+
+  ros::Duration(5.0).sleep(); // wait for plan to finish
 
   /*********************** Path Constraint test *******************************/
   // ROS_WARN("Starting Path Constraint test...");
@@ -158,20 +148,21 @@ int main(int argc, char** argv)
   //
   // // set the start state to a new pose
   // robot_state::RobotState start_state(*move_group.getCurrentState());
-  // geometry_msgs::Pose test_pose2;
-  // test_pose2.orientation.w = 1.0;
-  // test_pose2.position.x = 0.15;
-  // test_pose2.position.y = 0.0;
-  // test_pose2.position.z = 0.25;
+  // geometry_msgs::Pose test_pose3;
+  // test_pose3.orientation.w = 1.0;
+  // test_pose3.position.x = 0.15;
+  // test_pose3.position.y = 0.0;
+  // test_pose3.position.z = 0.45;
   // // start_state.setFromIK(joint_model_group, test_pose2);
   // move_group.setStartState(start_state);
   //
-  // move_group.setPoseTarget(test_pose2);
+  // move_group.setPoseTarget(test_pose3, "wx200_arm_A/ee_arm_link");
   //
   // move_group.setPlanningTime(10.0);
-  // //
+  // //  // move_group.setStartState(start_state);
+
   // success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  // ROS_INFO("Visualizing plan 2 (constraints) %s", success ? "" : "FAILED");
+  // ROS_INFO("Visualizing plan 3 (constraints) %s", success ? "" : "FAILED");
   //
   // move_group.move();
   //
@@ -190,41 +181,100 @@ int main(int argc, char** argv)
   //
   // move_group.setJointValueTarget(joint_group_positions);
   //
-  // bool success;
+  // // bool success;
   // success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   // ROS_INFO("Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
-  // //
   // move_group.move();
-
 
   /******* Cartesian Path Test ***********************************************/
   // move_group.setPlanningTime(10.0);
+  // ROS_WARN("Starting waypoints test!");
+  //
+  // robot_state::RobotState start_state(*move_group.getCurrentState());
+  // move_group.setStartState(start_state);
   //
   // std::vector<geometry_msgs::Pose> waypoints;
-  // waypoints.push_back(test_pose1);
+  // geometry_msgs::Pose test_pose3;
+  // test_pose3.orientation.w = 1.0;
+  // test_pose3.position.x = 0.15;
+  // test_pose3.position.y = 0.22;
+  // test_pose3.position.z = 0.45;
+  // waypoints.push_back(test_pose3);
   //
-  // geometry_msgs::Pose test_pose2 = test_pose1;
-  // test_pose2.position.z += 0.2;
-  // waypoints.push_back(test_pose2);
+  // geometry_msgs::Pose test_pose4;
+  // test_pose4.orientation.w = 1.0;
+  // test_pose4.position.x = 0.15;
+  // test_pose4.position.y = 0.32;
+  // test_pose4.position.z = 0.45;
+  // waypoints.push_back(test_pose4);
   //
-  // test_pose2.position.y -= 0.2;
-  // waypoints.push_back(test_pose2);
-  //
-  // test_pose2.position.x += 0.15;
-  // test_pose2.position.y += -0.15;
-  // test_pose2.position.z -= 0.1;
-  // waypoints.push_back(test_pose2);
+  // geometry_msgs::Pose test_pose5;
+  // test_pose5.orientation.w = 1.0;
+  // test_pose5.position.x = 0.15;
+  // test_pose5.position.y = 0.32;
+  // test_pose5.position.z = 0.35;
+  // waypoints.push_back(test_pose5);
   //
   // move_group.setMaxVelocityScalingFactor(0.1);
   //
   // moveit_msgs::RobotTrajectory trajectory;
-  // const double jump_threshold = 0.01;
+  // const double jump_threshold = 0.0;
   // const double eef_step = 0.01;
   // double fraction = move_group.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
   // ROS_INFO("Visualizing plan 4 (Cartesian path) (%.2f%% acheived)", fraction * 100.0);
   //
   // ROS_WARN("Moving!");
-  // move_group.move();
+  //
+  // // arm A
+  // static const std::string PLANNING_GROUP_2 = "wx200_arm_A/arm_controller";
+  // moveit::planning_interface::MoveGroupInterface move_group_2(PLANNING_GROUP_2);
+  // geometry_msgs::Pose first_A;
+  // first_A.orientation.w = 1.0;
+  // first_A.position.x = 0.0;
+  // first_A.position.y = 0.0;
+  // first_A.position.z = 0.35;
+  // move_group_2.setPoseTarget(first_A, "wx200_arm_A/ee_arm_link");
+  // move_group_2.move();
+  //
+  // move_group_2.setPlanningTime(10.0);
+  // robot_state::RobotState start_state_2(*move_group_2.getCurrentState());
+  // move_group_2.setStartState(start_state_2);
+  //
+  // std::vector<geometry_msgs::Pose> waypoints2;
+  // geometry_msgs::Pose test_pose6;
+  // test_pose6.orientation.w = 1.0;
+  // test_pose6.position.x = 0.15;
+  // test_pose6.position.y = 0.0;
+  // test_pose6.position.z = 0.45;
+  //
+  // geometry_msgs::Pose test_pose7;
+  // test_pose6.orientation.w = 1.0;
+  // test_pose6.position.x = 0.15;
+  // test_pose6.position.y = -0.12;
+  // test_pose6.position.z = 0.45;
+  //
+  // geometry_msgs::Pose test_pose8;
+  // test_pose6.orientation.w = 1.0;
+  // test_pose6.position.x = 0.15;
+  // test_pose6.position.y = -0.12;
+  // test_pose6.position.z = 0.35;
+  //
+  // waypoints2.push_back(test_pose6);
+  // waypoints2.push_back(test_pose7);
+  // waypoints2.push_back(test_pose8);
+  //
+  // moveit::planning_interface::MoveGroupInterface::Plan my_plan_2;
+  //
+  // move_group_2.setMaxVelocityScalingFactor(0.1);
+  // moveit_msgs::RobotTrajectory trajectory2;
+  // double fraction2 = move_group_2.computeCartesianPath(waypoints2, eef_step, jump_threshold, trajectory2);
+  // ROS_INFO("Visualizing plan 5 (Cartesian path) (%.2f%% acheived)", fraction2 * 100.0);
+  //
+  // my_plan.trajectory_ = trajectory;
+  // move_group.execute(my_plan);
+  //
+  // my_plan_2.trajectory_ = trajectory2;
+  // move_group_2.execute(my_plan_2);
 
 
   /************************** Wait till shutdown ******************************/

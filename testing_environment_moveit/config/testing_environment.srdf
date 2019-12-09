@@ -51,9 +51,9 @@
     <group name="testing_environment">
       <joint name="world_joint"/>
       <group name="wx200_arm_A/arm_controller"/>
-      <group name="wx200_arm_A/gripper_controller"/>
+      <!-- <group name="wx200_arm_A/gripper_controller"/> -->
       <group name="wx200_arm_B/arm_controller"/>
-      <group name="wx200_arm_B/gripper_controller"/>
+      <!-- <group name="wx200_arm_B/gripper_controller"/> -->
     </group>
 
     <!-- Group states -->
