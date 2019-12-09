@@ -50,7 +50,6 @@ int main(int argc, char** argv)
   // /********************* MoveGroupInterface test *****************************/
 
   static const std::string PLANNING_GROUP = "testing_environment";
-  // static const std::string PLANNING_GROUP = "wx200_arm_B/arm_controller";
   moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
 
   // for adding and removing collision objects
@@ -59,10 +58,23 @@ int main(int argc, char** argv)
   const robot_state::JointModelGroup* joint_model_group =
     move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
 
+
   // print out end-effector link for this group
   // move_group.setEndEffectorLink("wx200_arm_A/ee_arm_link");
   // ROS_INFO("End effector link: %s", move_group.getEndEffectorLink().c_str());
 
+  //MoveIt Visual tools
+  namespace rvt = rviz_visual_tools;
+  // moveit_visual_tools::MoveItVisualTools visual_tools("wx200_arm_A/base_link");
+  moveit_visual_tools::MoveItVisualTools visual_tools("link0");
+  visual_tools.deleteAllMarkers();
+  // visual_tools.loadRemoteControl();
+  Eigen::Isometry3d text_pose = Eigen::Isometry3d::Identity();
+  text_pose.translation().z() = 0.7;
+  visual_tools.publishText(text_pose, "MoveGroupInterface Demo", rvt::WHITE, rvt::XLARGE);
+  visual_tools.trigger();
+
+  // arm A pose
   geometry_msgs::Pose test_pose1;
   test_pose1.orientation.w = 1.0;
   test_pose1.position.x = 0.0;
@@ -70,6 +82,7 @@ int main(int argc, char** argv)
   test_pose1.position.z = 0.45;
   move_group.setPoseTarget(test_pose1, "wx200_arm_A/ee_arm_link");
 
+  // arm B pose
   geometry_msgs::Pose test_pose2;
   test_pose2.orientation.w = 1.0;
   test_pose2.position.x = 0.0;
@@ -78,10 +91,14 @@ int main(int argc, char** argv)
   move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-
   bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO("Visualizing test_pose 1 and test_pose 2(pose goal) %s", success ? "" : "FAILED");
 
-  ROS_INFO("Visualizing test_pose 1 (pose goal) %s", success ? "" : "FAILED");
+  visual_tools.publishAxisLabeled(test_pose1, "wx200_arm_A pose");
+  visual_tools.publishAxisLabeled(test_pose2, "wx200_arm_B pose");
+  visual_tools.publishText(text_pose, "Pose Goals", rvt::WHITE, rvt::XLARGE);
+  visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+  visual_tools.trigger();
 
   move_group.move();
 
@@ -171,20 +188,27 @@ int main(int argc, char** argv)
   // move_group.clearPathConstraints();
 
   /********************* Joint space test ******************************************/
-  // moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
-  //
-  // std::vector<double> joint_group_positions;
-  // current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
-  //
-  // // new pose in joint space
-  // joint_group_positions[0] = -1.0;
-  //
-  // move_group.setJointValueTarget(joint_group_positions);
-  //
-  // // bool success;
-  // success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  // ROS_INFO("Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
-  // move_group.move();
+  moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+
+  std::vector<double> joint_group_positions;
+  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+
+  // new pose in joint space
+  joint_group_positions[1] = 1.0;
+  joint_group_positions[7] = 1.0;
+
+  move_group.setJointValueTarget(joint_group_positions);
+
+  // bool success;
+  success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  ROS_INFO("Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
+
+  visual_tools.deleteAllMarkers();
+  visual_tools.publishText(text_pose, "Joint Space Goal", rvt::WHITE, rvt::XLARGE);
+  visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+  visual_tools.trigger();
+
+  move_group.move();
 
   /******* Cartesian Path Test ***********************************************/
   // move_group.setPlanningTime(10.0);
