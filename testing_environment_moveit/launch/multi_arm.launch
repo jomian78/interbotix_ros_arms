@@ -1,6 +1,6 @@
 <launch>
   <!-- args for robot_name and models -->
-  <arg name="robot_name"                        default=""/>
+  <arg name="robot_name"                        default="testing_environment"/>
   <arg name="arm_A_robot_model"                 default="wx200"/>
   <arg name="arm_B_robot_model"                 default="wx200"/>
 
@@ -13,12 +13,12 @@
   <arg name="arm_B_operating_mode"              default="position"/>
 
   <!-- Relative displacement between arm A and arm B -->
-  <arg name="relative_x"                    default="0"/>
-  <arg name="relative_y"                    default="0.22"/>
-  <arg name="relative_z"                    default="0"/>
-  <arg name="relative_roll"                 default="0"/>
-  <arg name="relative_pitch"                default="0"/>
-  <arg name="relative_yaw"                  default="0"/>
+  <arg name="relative_x"                    default=""/>
+  <arg name="relative_y"                    default=""/>
+  <arg name="relative_z"                    default=""/>
+  <arg name="relative_roll"                 default=""/>
+  <arg name="relative_pitch"                default=""/>
+  <arg name="relative_yaw"                  default=""/>
 
   <!-- world/visualization configurations for the testing environment -->
   <arg name="use_default_rviz"                  default="false"/>
@@ -112,12 +112,12 @@
   </node>
 
   <!-- move_group_test  -->
-  <node
+  <!-- <node
     name="move_group_test"
     pkg="testing_environment_moveit"
     type="move_group_test"
     output="screen"
     ns="$(arg robot_name)">
-  </node>
+  </node> -->
 
 </launch>

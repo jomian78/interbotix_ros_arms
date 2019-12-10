@@ -5,16 +5,16 @@
   <arg name="arm_B_robot_model"             default=""/>
 
   <!-- Relative displacement between arm A and arm B -->
-  <arg name="relative_x"                    default = "0"/>
-  <arg name="relative_y"                    default = "0.22"/>
-  <arg name="relative_z"                    default = "0"/>
-  <arg name="relative_roll"                 default = "0"/>
-  <arg name="relative_pitch"                default = "0"/>
-  <arg name="relative_yaw"                  default = "0"/>
+  <arg name="relative_x"                    default=""/>
+  <arg name="relative_y"                    default=""/>
+  <arg name="relative_z"                    default=""/>
+  <arg name="relative_roll"                 default=""/>
+  <arg name="relative_pitch"                default=""/>
+  <arg name="relative_yaw"                  default=""/>
 
   <!-- other args passed from multi_arm.launch -->
   <arg name="use_joint_pub"                 default="true"/>
-  <arg name="use_default_rviz"              default="true"/>
+  <arg name="use_default_rviz"              default="false"/>
   <arg name="use_default_gripper_bar"       default="true"/>
   <arg name="use_default_gripper_fingers"   default="true"/>
   <arg name="use_external_gripper_urdf"     default="false"/>
@@ -95,5 +95,13 @@
       args="0 0 0 0 0 0 /world /wx200_arm_B/base_link"/> -->
 
   </group>
+
+  <node
+    name="move_group_test"
+    pkg="testing_environment_moveit"
+    type="move_group_test"
+    output="screen"
+    ns="$(arg robot_name)">
+  </node>
 
 </launch>

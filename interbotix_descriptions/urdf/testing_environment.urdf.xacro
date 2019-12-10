@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <robot name="testing_environment" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:arg name="robot_name" default = "testing_environment"/>
-  <xacro:arg name="arm_A_robot_model" default = "wx200"/>
-  <xacro:arg name="arm_B_robot_model" default = "wx200"/>
+  <xacro:arg name="robot_name" default="testing_environment"/>
+  <xacro:arg name="arm_A_robot_model" default="wx200"/>
+  <xacro:arg name="arm_B_robot_model" default="wx200"/>
 
   <xacro:arg name="default_gripper_bar" default="true"/>
   <xacro:arg name="default_gripper_fingers" default="true"/>
@@ -13,13 +13,12 @@
   <xacro:arg name="moveit" default="false"/>
 
   <!-- Relative displacement between arm A and arm B -->
-  <xacro:arg name="relative_x" default = "0"/>
-  <xacro:arg name="relative_y" default = "0.22"/>
-  <xacro:arg name="relative_z" default = "0"/>
-  <xacro:arg name="relative_roll" default = "0"/>
-  <xacro:arg name="relative_pitch" default = "0"/>
-  <xacro:arg name="relative_yaw" default = "0"/>
-
+  <xacro:arg name="relative_x" default=""/>
+  <xacro:arg name="relative_y" default=""/>
+  <xacro:arg name="relative_z" default=""/>
+  <xacro:arg name="relative_roll" default=""/>
+  <xacro:arg name="relative_pitch" default=""/>
+  <xacro:arg name="relative_yaw" default=""/>
 
   <!-- Importing Interbotix's URDF files for WidowX_200-->
   <xacro:include filename="$(find interbotix_descriptions)/urdf/wx200_modified.urdf.xacro"/>
@@ -52,7 +51,7 @@
   <joint name="link0_joint_arm_B" type="fixed">
     <parent link="link0"/>
     <child link="$(arg arm_B_robot_model)_arm_B/base_link"/>
-    <origin xyz="0 $(arg relative_y) 0" rpy="0 0 0"/>
+    <origin xyz="$(arg relative_x) $(arg relative_y) $(arg relative_z)" rpy="$(arg relative_roll) $(arg relative_pitch) $(arg relative_yaw)"/>
   </joint>
 
 </robot>

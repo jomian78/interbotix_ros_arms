@@ -1,4 +1,10 @@
 <launch>
+  <arg name="relative_x" default=""/>
+  <arg name="relative_y" default=""/>
+  <arg name="relative_z" default=""/>
+  <arg name="relative_roll" default=""/>
+  <arg name="relative_pitch" default=""/>
+  <arg name="relative_yaw" default=""/>
 
   <!-- GDB Debug Option -->
   <arg name="debug" default="false" />
@@ -41,6 +47,12 @@
   <!-- load URDF, SRDF and joint_limits configuration -->
   <include file="$(find testing_environment_moveit)/launch/planning_context.launch">
     <arg name="load_robot_description" value="$(arg load_robot_description)" />
+    <arg name="relative_x" value="$(arg relative_x)"/>
+    <arg name="relative_y" value="$(arg relative_y)"/>
+    <arg name="relative_z" value="$(arg relative_z)"/>
+    <arg name="relative_roll" value="$(arg relative_roll)"/>
+    <arg name="relative_pitch" value="$(arg relative_pitch)"/>
+    <arg name="relative_yaw" value="$(arg relative_yaw)"/>
   </include>
 
   <!-- Planning Functionality -->

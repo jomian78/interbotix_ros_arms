@@ -5,8 +5,18 @@
   <!-- The name of the parameter under which the URDF is loaded -->
   <arg name="robot_description" default="robot_description"/>
 
+  <!-- x,y,z and r,p,y args -->
+  <arg name="relative_x" default=""/>
+  <arg name="relative_y" default=""/>
+  <arg name="relative_z" default=""/>
+  <arg name="relative_roll" default=""/>
+  <arg name="relative_pitch" default=""/>
+  <arg name="relative_yaw" default=""/>
+
   <!-- Load universal robot description format (URDF) -->
-  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro  '$(find interbotix_descriptions)/urdf/testing_environment.urdf.xacro'"/>
+  <param if="$(arg load_robot_description)" name="$(arg robot_description)" command="xacro  '$(find interbotix_descriptions)/urdf/testing_environment.urdf.xacro'
+    relative_x:=$(arg relative_x) relative_y:=$(arg relative_y) relative_z:=$(arg relative_z)
+    relative_roll:=$(arg relative_roll) relative_pitch:=$(arg relative_pitch) relative_yaw:=$(arg relative_yaw)"/>
 
   <!-- The semantic description that corresponds to the URDF -->
   <param name="$(arg robot_description)_semantic" textfile="$(find testing_environment_moveit)/config/testing_environment.srdf" />
