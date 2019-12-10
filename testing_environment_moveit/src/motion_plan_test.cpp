@@ -48,17 +48,20 @@ int main(int argc, char** argv)
   // construct a robot state that maintains the configuration of the robot
   robot_state::RobotStatePtr kinematic_state(new robot_state::RobotState(kinematic_model));
 
+  double timeout = 0.1;
+  int cntr = 0;
+
   // main loop
   ros::Rate loop_rate(50.0);
   while (ros::ok()){
     ros::spinOnce();
 
-    // kinematic_state->setVariablePosition("wx200_arm_B_waist", 10.0);
+    // set current joint values
     kinematic_state->setVariablePositions(curr_joint_names, curr_joint_positions);
     const robot_state::JointModelGroup* joint_model_group = kinematic_model->getJointModelGroup("testing_environment");
     const std::vector<std::string>& joint_names = joint_model_group->getVariableNames();
 
-    // retrieve the current set of joint values tored in the state for the testing_environment
+    // print current joint values
     std::vector<double> joint_values;
     kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
     for (std::size_t i = 0; i < joint_names.size(); ++i)
@@ -66,6 +69,27 @@ int main(int argc, char** argv)
       ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
     }
 
+    // after 200 iterations, execute the basic motion plan
+    ROS_WARN("cntr value: %d", cntr);
+    if (cntr == 200){
+      const Eigen::Isometry3d& end_effector_state = kinematic_state->getGlobalLinkTransform("wx200_arm_A/ee_gripper_link");
+      bool ik_found = kinematic_state->setFromIK(joint_model_group, end_effector_state, timeout);
+
+      if (ik_found)
+      {
+        kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
+        for (std::size_t i = 0; i < joint_names.size(); ++i)
+        {
+          ROS_INFO("Joint %s: %f", joint_names[i].c_str(), joint_values[i]);
+        }
+      }
+      else
+      {
+        ROS_INFO("Did not find IK solution");
+      }
+    }
+
+    cntr++;
     loop_rate.sleep();
   }
 
