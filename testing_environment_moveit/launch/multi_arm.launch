@@ -120,4 +120,18 @@
     ns="$(arg robot_name)">
   </node> -->
 
+  <node
+    name="pseudo_random_arm_poses"
+    pkg="testing_environment_moveit"
+    type="pseudo_random_arm_poses"
+    output="screen"
+    ns="$(arg robot_name)">
+    <param name="relative_x" value="$(arg relative_x)" />
+    <param name="relative_y" value="$(arg relative_y)" />
+    <param name="relative_z" value="$(arg relative_z)" />
+    <param name="relative_roll" value="$(arg relative_roll)" />
+    <param name="relative_pitch" value="$(arg relative_pitch)" />
+    <param name="relative_yaw" value="$(arg relative_yaw)" />
+  </node>
+
 </launch>

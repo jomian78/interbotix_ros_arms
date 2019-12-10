@@ -96,12 +96,4 @@
 
   </group>
 
-  <node
-    name="move_group_test"
-    pkg="testing_environment_moveit"
-    type="move_group_test"
-    output="screen"
-    ns="$(arg robot_name)">
-  </node>
-
 </launch>
