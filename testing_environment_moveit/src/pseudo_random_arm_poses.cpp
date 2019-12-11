@@ -10,6 +10,15 @@
 
 #include <moveit_visual_tools/moveit_visual_tools.h>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
+float random_float(float min, float max){
+  float random = ((float) rand()) / (float) RAND_MAX;
+  float diff = max - min;
+  float r = random * diff;
+  return min + r;
+}
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "move_group_test");
@@ -31,6 +40,23 @@ int main(int argc, char** argv)
   nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_pitch", relative_pitch, 0.0);
   nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_yaw", relative_yaw, 0.0);
   ROS_WARN("relative_y value: %f", relative_y);
+
+  // perch distance and yaw
+  float perch_distance = 0.4;
+  float perch_yaw = 3.1415926;
+  float perch_height = 0.65/2.0;
+
+  // perch sphere parameters
+  float perch_max_x = 0.20;
+  float perch_min_x = 0.05;
+
+  float perch_max_y_A = 0.20;
+  float perch_min_y_A = 0.05;
+  float perch_max_y_B = -0.05;
+  float perch_min_y_B = -0.20;
+
+  float perch_max_z = 0.10;
+  float perch_min_z = -0.10;
 
   // wait for everything to initialize
   ros::Duration(3.0).sleep();
@@ -54,7 +80,6 @@ int main(int argc, char** argv)
   /****************************************************************************
   *                  Declaring Collision Objects                               *
   *****************************************************************************/
-
   /************** ground plane arm A ********************/
   moveit_msgs::CollisionObject wx200_arm_A_table;
   wx200_arm_A_table.header.frame_id = move_group.getPlanningFrame();
@@ -116,7 +141,7 @@ int main(int argc, char** argv)
 
   geometry_msgs::Pose box_pose;
   box_pose.orientation.w = 1.0;
-  box_pose.position.x = 0.3;
+  box_pose.position.x = perch_distance;
   box_pose.position.y = relative_y/2.0;
   box_pose.position.z = 0.65/4.0;
 
@@ -124,7 +149,7 @@ int main(int argc, char** argv)
   perch.primitive_poses.push_back(box_pose);
   perch.operation = perch.ADD;
 
-  /******* Add these collision objects to the planning scene *****************/
+  /******* Add these collision objects to the planning scene *******/
   std::vector<moveit_msgs::CollisionObject> collision_objects;
   collision_objects.push_back(wx200_arm_A_table);
   collision_objects.push_back(wx200_arm_B_table);
@@ -132,103 +157,110 @@ int main(int argc, char** argv)
   planning_scene_interface.addCollisionObjects(collision_objects);
 
   /****************************************************************************
-  *                  Pseudo-random poses                                      *
+  *                  Coordinate frames to perch reference point               *
   *****************************************************************************/
-  // arm A pose
-  geometry_msgs::Pose test_pose1;
-  test_pose1.orientation.w = 1.0;
-  test_pose1.position.x = 0.0;
-  test_pose1.position.y = 0.0;
-  test_pose1.position.z = 0.45;
-  move_group.setPoseTarget(test_pose1, "wx200_arm_A/ee_arm_link");
+  tf2::Vector3 wx200_arm_A_position(0.0,0.0,0.0);
+  tf2::Quaternion wx200_arm_A_orientation(tf2::Vector3(0,0,1), 0.0);
+  tf2::Transform global_to_wx200_arm_A(wx200_arm_A_orientation, wx200_arm_A_position);
+
+  tf2::Vector3 wx200_arm_B_position(relative_x,relative_y,relative_z);
+  tf2::Quaternion wx200_arm_B_orientation(tf2::Vector3(0,0,1), relative_yaw);
+  tf2::Transform global_to_wx200_arm_B(wx200_arm_B_orientation, wx200_arm_B_position);
+
+  tf2::Vector3 perch_position(perch_distance,relative_y/2.0,perch_height);
+  tf2::Quaternion perch_orientation(tf2::Vector3(0,0,1), perch_yaw);
+  tf2::Transform global_to_perch(perch_orientation, perch_position);
+
+  /****************************************************************************
+  *                  Generate pseudo_random points                            *
+  *****************************************************************************/
+  // seed the pseudo random number generator
+  srand(time(0));
+
+  // randomly generate a point for arm_A around the perch
+  float wx200_arm_A_object_x = random_float(perch_min_x, perch_max_x);
+  float wx200_arm_A_object_y = random_float(perch_min_y_A, perch_max_y_A);
+  float wx200_arm_A_object_z = random_float(perch_min_z, perch_max_z);
+
+  // randomly generate a point for arm_B around the perch
+  float wx200_arm_B_object_x = random_float(perch_min_x, perch_max_x);
+  float wx200_arm_B_object_y = random_float(perch_min_y_B, perch_max_y_B);
+  float wx200_arm_B_object_z = random_float(perch_min_z, perch_max_z);
+
+  // perch to object A
+  tf2::Vector3 wx200_arm_A_object_position(wx200_arm_A_object_x,wx200_arm_A_object_y,wx200_arm_A_object_z);
+  tf2::Quaternion wx200_arm_A_object_orientation(tf2::Vector3(0,0,1), 3.1415926);
+  tf2::Transform perch_to_object_A(wx200_arm_A_object_orientation, wx200_arm_A_object_position);
+
+  // perch to object B
+  tf2::Vector3 wx200_arm_B_object_position(wx200_arm_B_object_x,wx200_arm_B_object_y,wx200_arm_B_object_z);
+  tf2::Quaternion wx200_arm_B_object_orientation(tf2::Vector3(0,0,1), 3.1415926);
+  tf2::Transform perch_to_object_B(wx200_arm_B_object_orientation, wx200_arm_B_object_position);
+
+  // global transform to object A
+  tf2::Transform global_to_object_A = global_to_perch*perch_to_object_A;
+
+  // global transform to object B
+  tf2::Transform global_to_object_B = global_to_perch*perch_to_object_B;
+
+  // arm A position
+  float object_A_position_x = global_to_object_A.getOrigin().x();
+  float object_A_position_y = global_to_object_A.getOrigin().y();
+  float object_A_position_z = global_to_object_A.getOrigin().z();
+  move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
+  // move_group.setJointValueTarget("wx200_arm_A_wrist_angle", 3.1415926/2.0);
 
   // arm B pose
-  geometry_msgs::Pose test_pose2;
-  test_pose2.orientation.w = 1.0;
-  test_pose2.position.x = 0.0;
-  test_pose2.position.y = 0.25;
-  test_pose2.position.z = 0.35;
-  move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
+  float object_B_position_x = global_to_object_B.getOrigin().x();
+  float object_B_position_y = global_to_object_B.getOrigin().y();
+  float object_B_position_z = global_to_object_B.getOrigin().z();
+  move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
+  // move_group.setJointValueTarget("wx200_arm_B_wrist_angle", 3.1415926/2.0);
+
 
   moveit::planning_interface::MoveGroupInterface::Plan my_plan;
   bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
   ROS_INFO("Visualizing test_pose 1 and test_pose 2(pose goal) %s", success ? "" : "FAILED");
 
-  visual_tools.publishAxisLabeled(test_pose1, "wx200_arm_A pose");
-  visual_tools.publishAxisLabeled(test_pose2, "wx200_arm_B pose");
+  geometry_msgs::PoseStamped object_A_stamped_pose;
+  geometry_msgs::PoseStamped object_B_stamped_pose;
+  object_A_stamped_pose = move_group.getPoseTarget("wx200_arm_A/ee_arm_link");
+  object_B_stamped_pose = move_group.getPoseTarget("wx200_arm_B/ee_arm_link");
+
+  visual_tools.publishAxisLabeled(object_A_stamped_pose.pose, "object_A pose");
+  visual_tools.publishAxisLabeled(object_B_stamped_pose.pose, "object_B pose");
   visual_tools.publishText(text_pose, "Pose Goals", rvt::WHITE, rvt::XLARGE);
   visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
   visual_tools.trigger();
 
   move_group.move();
 
-  geometry_msgs::Pose test_pose3;
-  test_pose3.orientation.w = 1.0;
-  test_pose3.position.x = 0.0;
-  test_pose3.position.y = 0.0;
-  test_pose3.position.z = 0.35;
-  move_group.setPoseTarget(test_pose3, "wx200_arm_A/ee_arm_link");
-
-  geometry_msgs::Pose test_pose4;
-  test_pose4.orientation.w = 1.0;
-  test_pose4.position.x = 0.0;
-  test_pose4.position.y = 0.25;
-  test_pose4.position.z = 0.45;
-  move_group.setPoseTarget(test_pose4, "wx200_arm_B/ee_arm_link");
-
-  move_group.move();
-
-  move_group.setPoseTarget(test_pose1, "wx200_arm_A/ee_arm_link");
-  move_group.setPoseTarget(test_pose2, "wx200_arm_B/ee_arm_link");
-  move_group.move();
-
   // wait for plan to finish
   ros::Duration(5.0).sleep();
 
-  /*********************** Path Constraint test *******************************/
-  // ROS_WARN("Starting Path Constraint test...");
+  /*********************** Wrist Constraints *******************************/
+  // moveit_msgs::JointConstraint arm_A_joint_constraint;
+  // arm_A_joint_constraint.joint_name = "wx200_arm_A_wrist_angle";
+  // arm_A_joint_constraint.position = 3.1415926/2.0;
+  // arm_A_joint_constraint.tolerance_above = 0.01;
+  // arm_A_joint_constraint.tolerance_below = 0.01;
+  // arm_A_joint_constraint.weight = 0.5; // denotes relative importance 0-1
   //
-  // // create a path constraint
-  // moveit_msgs::JointConstraint jc_wrist_angle;
-  // jc_wrist_angle.joint_name = "wx200_arm_A_wrist_angle";
-  // jc_wrist_angle.position = 0.0;
-  // jc_wrist_angle.tolerance_above = 0.1;
-  // jc_wrist_angle.tolerance_below = 0.1;
-  // jc_wrist_angle.weight = 0.5; // denotes relative importance 0-1
+  // moveit_msgs::JointConstraint arm_B_joint_constraint;
+  // arm_B_joint_constraint.joint_name = "wx200_arm_B_wrist_angle";
+  // arm_B_joint_constraint.position = 3.1415926/2.0;
+  // arm_B_joint_constraint.tolerance_above = 0.01;
+  // arm_B_joint_constraint.tolerance_below = 0.01;
+  // arm_B_joint_constraint.weight = 0.5; // denotes relative importance 0-1
   //
-  // moveit_msgs::JointConstraint jc_waist;
-  // jc_waist.joint_name = "wx200_arm_A_waist";
-  // jc_waist.position = 0.0;
-  // jc_waist.tolerance_above = 0.1;
-  // jc_waist.tolerance_below = 0.1;
-  // jc_waist.weight = 0.4; // denotes relative importance 0-1
-  //
-  // // set the path constraint for the move group
-  // moveit_msgs::Constraints test_constraints;
-  // test_constraints.joint_constraints.push_back(jc_wrist_angle);
-  // test_constraints.joint_constraints.push_back(jc_waist);
-  // move_group.setPathConstraints(test_constraints);
-  //
-  // // set the start state to a new pose
-  // robot_state::RobotState start_state(*move_group.getCurrentState());
-  // geometry_msgs::Pose test_pose3;
-  // test_pose3.orientation.w = 1.0;
-  // test_pose3.position.x = 0.15;
-  // test_pose3.position.y = 0.0;
-  // test_pose3.position.z = 0.45;
-  // // start_state.setFromIK(joint_model_group, test_pose2);
-  // move_group.setStartState(start_state);
-  //
-  // move_group.setPoseTarget(test_pose3, "wx200_arm_A/ee_arm_link");
+  // moveit_msgs::Constraints arm_constraints;
+  // arm_constraints.joint_constraints.push_back(arm_A_joint_constraint);
+  // arm_constraints.joint_constraints.push_back(arm_B_joint_constraint);
+  // move_group.setPathConstraints(arm_constraints);
   //
   // move_group.setPlanningTime(10.0);
-  // //  // move_group.setStartState(start_state);
 
-  // success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-  // ROS_INFO("Visualizing plan 3 (constraints) %s", success ? "" : "FAILED");
-  //
-  // move_group.move();
-  //
+  // clear path constraints
   // ROS_WARN("Done!");
   // ROS_WARN("Clearing path constraints...");
   // move_group.clearPathConstraints();
