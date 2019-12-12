@@ -46,6 +46,12 @@ add_dependencies(pseudo_random_arm_poses ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(pseudo_random_arm_poses ${catkin_LIBRARIES})
 
+# zero_gravity executable
+add_executable(zero_gravity src/zero_gravity.cpp)
+add_dependencies(zero_gravity ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(zero_gravity ${catkin_LIBRARIES})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})

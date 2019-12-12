@@ -134,4 +134,12 @@
     <param name="relative_yaw" value="$(arg relative_yaw)" />
   </node>
 
+  <!-- <node
+    name="zero_gravity"
+    pkg="testing_environment_moveit"
+    type="zero_gravity"
+    output="screen"
+    ns="$(arg robot_name)">
+  </node> -->
+
 </launch>
