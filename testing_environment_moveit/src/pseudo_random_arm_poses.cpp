@@ -235,57 +235,93 @@ int main(int argc, char** argv)
 
   move_group.move();
 
+  // adding more waypoints
   object_A_position_x = 0.3;
-  object_A_position_y = 0.3;
+  object_A_position_y = -0.2;
   object_A_position_z = 0.2;
   move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
 
-  object_B_position_x = -0.3;
-  object_B_position_y = 0.1;
+  object_B_position_x = 0.3;
+  object_B_position_y = 0.2;
   object_B_position_z = 0.2;
   move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
   move_group.move();
 
-  object_A_position_x = 0.1;
-  object_A_position_y = 0.1;
+  object_A_position_x = 0.15;
+  object_A_position_y = 0.15;
   object_A_position_z = 0.2;
   move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
 
-  object_B_position_x = -0.2;
-  object_B_position_y = 0.1;
-  object_B_position_z = 0.4;
+  object_B_position_x = 0.20;
+  object_B_position_y = 0.05;
+  object_B_position_z = 0.2;
   move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
   move_group.move();
+
+  object_A_position_x = 0.20;
+  object_A_position_y = -0.1;
+  object_A_position_z = 0.35;
+  move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
+
+  object_B_position_x = 0.15;
+  object_B_position_y = 0.3;
+  object_B_position_z = 0.35;
+  move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
+  move_group.move();
+
+  object_A_position_x = 0.25;
+  object_A_position_y = 0.15;
+  object_A_position_z = 0.25;
+  move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
+
+  object_B_position_x = 0.10;
+  object_B_position_y = 0.02;
+  object_B_position_z = 0.05;
+  move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
+  move_group.move();
+
+  object_A_position_x = 0.20;
+  object_A_position_y = -0.05;
+  object_A_position_z = 0.15;
+  move_group.setPositionTarget(object_A_position_x, object_A_position_y, object_A_position_z, "wx200_arm_A/ee_arm_link");
+
+  object_B_position_x = 0.15;
+  object_B_position_y = 0.05;
+  object_B_position_z = 0.15;
+  move_group.setPositionTarget(object_B_position_x, object_B_position_y, object_B_position_z, "wx200_arm_B/ee_arm_link");
+  move_group.move();
+
+
 
   // wait for plan to finish
   ros::Duration(5.0).sleep();
 
   /*********************** Wrist Constraints *******************************/
-  moveit_msgs::JointConstraint arm_A_joint_constraint;
-  arm_A_joint_constraint.joint_name = "wx200_arm_A_wrist_angle";
-  arm_A_joint_constraint.position = 3.1415926/2.0;
-  arm_A_joint_constraint.tolerance_above = 0.01;
-  arm_A_joint_constraint.tolerance_below = 0.01;
-  arm_A_joint_constraint.weight = 0.5; // denotes relative importance 0-1
-
-  moveit_msgs::JointConstraint arm_B_joint_constraint;
-  arm_B_joint_constraint.joint_name = "wx200_arm_B_wrist_angle";
-  arm_B_joint_constraint.position = 3.1415926/2.0;
-  arm_B_joint_constraint.tolerance_above = 0.01;
-  arm_B_joint_constraint.tolerance_below = 0.01;
-  arm_B_joint_constraint.weight = 0.5; // denotes relative importance 0-1
-
-  moveit_msgs::Constraints arm_constraints;
-  arm_constraints.joint_constraints.push_back(arm_A_joint_constraint);
-  arm_constraints.joint_constraints.push_back(arm_B_joint_constraint);
-  move_group.setPathConstraints(arm_constraints);
-
-  move_group.setPlanningTime(10.0);
-
-  clear path constraints
-  ROS_WARN("Done!");
-  ROS_WARN("Clearing path constraints...");
-  move_group.clearPathConstraints();
+  // moveit_msgs::JointConstraint arm_A_joint_constraint;
+  // arm_A_joint_constraint.joint_name = "wx200_arm_A_wrist_angle";
+  // arm_A_joint_constraint.position = 3.1415926/2.0;
+  // arm_A_joint_constraint.tolerance_above = 0.01;
+  // arm_A_joint_constraint.tolerance_below = 0.01;
+  // arm_A_joint_constraint.weight = 0.5; // denotes relative importance 0-1
+  //
+  // moveit_msgs::JointConstraint arm_B_joint_constraint;
+  // arm_B_joint_constraint.joint_name = "wx200_arm_B_wrist_angle";
+  // arm_B_joint_constraint.position = 3.1415926/2.0;
+  // arm_B_joint_constraint.tolerance_above = 0.01;
+  // arm_B_joint_constraint.tolerance_below = 0.01;
+  // arm_B_joint_constraint.weight = 0.5; // denotes relative importance 0-1
+  //
+  // moveit_msgs::Constraints arm_constraints;
+  // arm_constraints.joint_constraints.push_back(arm_A_joint_constraint);
+  // arm_constraints.joint_constraints.push_back(arm_B_joint_constraint);
+  // move_group.setPathConstraints(arm_constraints);
+  //
+  // move_group.setPlanningTime(10.0);
+  //
+  // // clear path constraints
+  // ROS_WARN("Done!");
+  // ROS_WARN("Clearing path constraints...");
+  // move_group.clearPathConstraints();
 
   /************************** Wait till shutdown ******************************/
   while(ros::ok()){
