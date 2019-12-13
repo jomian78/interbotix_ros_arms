@@ -4,7 +4,7 @@
 This repository contains code and documentation for the dynamic animal testing environment. A high-level description of the project can be found on my [portfolio](https://jomian78.github.io/).
 
 ## Quick start
-1) Navigate to your `\home` directory (or your directory of choice)
+1) Navigate to your `/home` directory (or your directory of choice)
 2) Clone this repository:
 ```
 git clone https://github.com/jomian78/interbotix_ros_arms
@@ -13,13 +13,50 @@ git clone https://github.com/jomian78/interbotix_ros_arms
 
 4) To start the environment, run:
 ```
-roslaunch testing_environment_moveit testing_environment.launch relative_x:=0.0 relative_y:=0.22 relative_z:=0.0 relative_roll:=0,0 relative_pitch:=0.0 relative_yaw:=0.0
+roslaunch testing_environment_moveit testing_environment.launch relative_x:=0.0 relative_y:=0.24 relative_z:=0.0 relative_roll:=0,0 relative_pitch:=0.0 relative_yaw:=0.0
 ```
 
-5) To send the arms to their home position, run:
+5) To send the arms through a quick series of end-effector way-points, run:
 ```
-rosrun testing_environment_moveit motion_plan_test
+rosrun testing_environment_moveit move_group_test
 ```
+
+## Manual Poses
+1) To start the environment, run:
+```
+roslaunch testing_environment_moveit testing_environment.launch relative_x:=0.0 relative_y:=0.24 relative_z:=0.0 relative_roll:=0,0 relative_pitch:=0.0 relative_yaw:=0.0
+```
+
+2) Make sure the `manual_poses` and `run_through_waypoints` nodes are uncommented in your
+`multi_arm.launch` file
+
+3) To torque the motors off on both arms and begin moving them to manual positions, run:
+```
+rosrun testing_environment_moveit manual_poses
+```
+4) When you have moved both of the arms to a desired pose, run:
+```
+rosrun testing_environment_moveit waypoint_1
+```
+to save this pose as a waypoint in your motion plan.
+
+5) Repeat this step for two additional waypoints in the sequence
+6) Run:
+```
+rosrun testing_environment_moveit run_through_waypoints
+```
+to move the arms through all the waypoints in your sequence. The arms will move to a reset position before commencing the sequence.
+
+## Generating experimental trials
+1) To start the environment, run:
+```
+roslaunch testing_environment_moveit testing_environment.launch relative_x:=0.0 relative_y:=0.24 relative_z:=0.0 relative_roll:=0,0 relative_pitch:=0.0 relative_yaw:=0.0
+```
+2) Run:
+```
+rosrun testing_environment_moveit pseudo_random_arm_poses
+```
+to generate a set of pseudo_random end effector positions within a specified bounding box in front of the animal test subject.
 
 ## udev rules
 
