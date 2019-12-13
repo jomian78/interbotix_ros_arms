@@ -91,12 +91,30 @@ int main(int argc, char **argv)
   ros::spinOnce(); // grab the waypoints
   ros::spinOnce(); // grab the waypoints
 
+  // move to reset position
+  move_group.setJointValueTarget("wx200_arm_A_waist", 0.0);
+  move_group.setJointValueTarget("wx200_arm_A_shoulder", -1.88);
+  move_group.setJointValueTarget("wx200_arm_A_elbow", -1.55);
+  move_group.setJointValueTarget("wx200_arm_A_wrist_angle", -0.8);
+  move_group.setJointValueTarget("wx200_arm_A_wrist_rotate", 0.0);
+  move_group.setJointValueTarget("wx200_arm_A_gripper", 0.0);
+  move_group.setJointValueTarget("wx200_arm_A_left_finger", 0.0);
+  move_group.setJointValueTarget("wx200_arm_A_right_finger", 0.0);
+
+  move_group.setJointValueTarget("wx200_arm_B_waist", 0.0);
+  move_group.setJointValueTarget("wx200_arm_B_shoulder", -1.88);
+  move_group.setJointValueTarget("wx200_arm_B_elbow", -1.55);
+  move_group.setJointValueTarget("wx200_arm_B_wrist_angle", 0.0);
+  move_group.setJointValueTarget("wx200_arm_B_wrist_rotate", 0.0);
+  move_group.setJointValueTarget("wx200_arm_B_gripper", 0.0);
+  move_group.setJointValueTarget("wx200_arm_B_left_finger", 0.0);
+  move_group.setJointValueTarget("wx200_arm_B_right_finger", 0.0);
+
+  ROS_WARN("Moving to reset position!");
+  move_group.move();
+  ros::Duration(3.0).sleep();
+
   // waypoint 1
-  // moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
-  // std::vector<double> move_1;
-  // current_state->copyJointGroupPositions(joint_model_group, move_1);
-  // ROS_WARN("joint_positions_1[0]: %f", joint_positions_1[0]);
-  // ROS_WARN("joint_positions_1[1]: %f", joint_positions_1[1]);
   move_group.setJointValueTarget("wx200_arm_A_waist", joint_positions_1[0]);
   move_group.setJointValueTarget("wx200_arm_A_shoulder", joint_positions_1[1]);
   move_group.setJointValueTarget("wx200_arm_A_elbow", joint_positions_1[2]);
@@ -115,13 +133,11 @@ int main(int argc, char **argv)
   move_group.setJointValueTarget("wx200_arm_B_left_finger", joint_positions_1[14]);
   move_group.setJointValueTarget("wx200_arm_B_right_finger", joint_positions_1[15]);
 
+  ROS_WARN("Moving to waypoint 1!");
   move_group.move();
   ros::Duration(3.0).sleep();
 
   // waypoint 2
-  // current_state = move_group.getCurrentState();
-  // std::vector<double> move_2;
-  // current_state->copyJointGroupPositions(joint_model_group, move_2);
   move_group.setJointValueTarget("wx200_arm_A_waist", joint_positions_2[0]);
   move_group.setJointValueTarget("wx200_arm_A_shoulder", joint_positions_2[1]);
   move_group.setJointValueTarget("wx200_arm_A_elbow", joint_positions_2[2]);
@@ -139,13 +155,11 @@ int main(int argc, char **argv)
   move_group.setJointValueTarget("wx200_arm_B_gripper", joint_positions_2[13]);
   move_group.setJointValueTarget("wx200_arm_B_left_finger", joint_positions_2[14]);
   move_group.setJointValueTarget("wx200_arm_B_right_finger", joint_positions_2[15]);
+  ROS_WARN("Moving to waypoint 2!");
   move_group.move();
   ros::Duration(3.0).sleep();
 
   // waypoint 3
-  // current_state = move_group.getCurrentState();
-  // std::vector<double> move_3;
-  // current_state->copyJointGroupPositions(joint_model_group, move_3);
   move_group.setJointValueTarget("wx200_arm_A_waist", joint_positions_3[0]);
   move_group.setJointValueTarget("wx200_arm_A_shoulder", joint_positions_3[1]);
   move_group.setJointValueTarget("wx200_arm_A_elbow", joint_positions_3[2]);
@@ -163,6 +177,7 @@ int main(int argc, char **argv)
   move_group.setJointValueTarget("wx200_arm_B_gripper", joint_positions_3[13]);
   move_group.setJointValueTarget("wx200_arm_B_left_finger", joint_positions_3[14]);
   move_group.setJointValueTarget("wx200_arm_B_right_finger", joint_positions_3[15]);
+  ROS_WARN("Moving to waypoint 3!");
   move_group.move();
   ros::Duration(3.0).sleep();
 
