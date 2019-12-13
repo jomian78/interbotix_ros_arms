@@ -13,12 +13,13 @@
 #include <moveit_visual_tools/moveit_visual_tools.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
-// joint_state 1
+// joint_state 3
+sensor_msgs::JointState curr_joint_state;
 sensor_msgs::JointState waypoint_3;
 
 void joint_state_cb(const sensor_msgs::JointState &msg)
 {
-  waypoint_3 = msg;
+  curr_joint_state = msg;
 }
 
 int main(int argc, char **argv)
@@ -29,19 +30,20 @@ int main(int argc, char **argv)
   spinner.start();
 
   // Subscribe/Publish
-  ros::Subscriber joint_states = n.subscribe("/testing_environment/joint_states", 100, joint_state_cb);
-  ros::Publisher pub_waypoint_3 = n.advertise<sensor_msgs::JointState>("/testing_environment/waypoint_3", 100);
+  ros::Subscriber joint_states = n.subscribe("/testing_environment/joint_states", 50, joint_state_cb);
+  ros::Publisher pub_waypoint_3 = n.advertise<sensor_msgs::JointState>("/testing_environment/waypoint_3", 50);
 
   ros::Rate loop_rate(50);
 
   // Wait for the arm node to finish initializing
-  while ((waypoint_3.position.size() < 1) && ros::ok())
+  while ((curr_joint_state.position.size() < 1) && ros::ok())
   {
     ros::spinOnce();
     loop_rate.sleep();
   }
 
-  ros::spinOnce(); // get first waypoint
+  ros::spinOnce(); // get third waypoint
+  waypoint_3 = curr_joint_state;
   ROS_WARN("Publishing third waypoint!");
   while (ros::ok())
   {

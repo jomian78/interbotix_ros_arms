@@ -14,11 +14,12 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 // joint_state 1
+sensor_msgs::JointState curr_joint_state;
 sensor_msgs::JointState waypoint_1;
 
 void joint_state_cb(const sensor_msgs::JointState &msg)
 {
-  waypoint_1 = msg;
+  curr_joint_state = msg;
 }
 
 int main(int argc, char **argv)
@@ -29,19 +30,20 @@ int main(int argc, char **argv)
   spinner.start();
 
   // Subscribe/Publish
-  ros::Subscriber joint_states = n.subscribe("/testing_environment/joint_states", 100, joint_state_cb);
-  ros::Publisher pub_waypoint_1 = n.advertise<sensor_msgs::JointState>("/testing_environment/waypoint_1", 100);
+  ros::Subscriber joint_states = n.subscribe("/testing_environment/joint_states", 50, joint_state_cb);
+  ros::Publisher pub_waypoint_1 = n.advertise<sensor_msgs::JointState>("/testing_environment/waypoint_1", 50);
 
   ros::Rate loop_rate(50);
 
   // Wait for the arm node to finish initializing
-  while ((waypoint_1.position.size() < 1) && ros::ok())
+  while ((curr_joint_state.position.size() < 1) && ros::ok())
   {
     ros::spinOnce();
     loop_rate.sleep();
   }
 
   ros::spinOnce(); // get first waypoint
+  waypoint_1 = curr_joint_state;
   ROS_WARN("Publishing first waypoint!");
   while (ros::ok())
   {

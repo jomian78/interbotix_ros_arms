@@ -158,4 +158,12 @@
     ns="$(arg robot_name)">
   </node>
 
+  <node
+    name="run_through_waypoints"
+    pkg="testing_environment_moveit"
+    type="run_through_waypoints"
+    output="screen"
+    ns="$(arg robot_name)">
+  </node>
+
 </launch>
