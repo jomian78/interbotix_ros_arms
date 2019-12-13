@@ -52,6 +52,12 @@ add_dependencies(zero_gravity ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(zero_gravity ${catkin_LIBRARIES})
 
+# shape_waypoints executable
+add_executable(shape_waypoints src/shape_waypoints.cpp)
+add_dependencies(shape_waypoints ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(shape_waypoints ${catkin_LIBRARIES})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
