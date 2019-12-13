@@ -142,10 +142,18 @@
     ns="$(arg robot_name)">
   </node> -->
 
-  <node
+  <!-- <node
     name="shape_waypoints"
     pkg="testing_environment_moveit"
     type="shape_waypoints"
+    output="screen"
+    ns="$(arg robot_name)">
+  </node> -->
+
+  <node
+    name="manual_poses"
+    pkg="testing_environment_moveit"
+    type="manual_poses"
     output="screen"
     ns="$(arg robot_name)">
   </node>
