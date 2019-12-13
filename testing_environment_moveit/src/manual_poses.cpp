@@ -1,6 +1,4 @@
 // ROS imports
-#include <ros/ros.h>
-#include "interbotix_sdk/RobotInfo.h"
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Float64.h>
 #include <std_srvs/Empty.h>
@@ -46,35 +44,38 @@ int main(int argc, char **argv)
   std_srvs::Empty wx200_arm_A_e_srv;
   std_srvs::Empty wx200_arm_B_e_srv;
 
+  ros::Rate loop_rate(50);
+
+  // Wait for the arm node to finish initializing
+  while ((joint_states.position.size() < 1) && ros::ok())
+  {
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+
   wx200_arm_A_success = wx200_arm_A_srv_torque_off.call(wx200_arm_A_e_srv);
   if (!wx200_arm_A_success)
   {
-    ROS_ERROR("Could not torque off wx200_arm_A arm.");
+    ROS_ERROR("Could not torque off wx200_arm_A arm");
     return 1;
   }
   else{
-    ROS_WARN("wx200_arm_A torqued off!")
+    ROS_WARN("wx200_arm_A torqued off!");
   }
 
   wx200_arm_B_success = wx200_arm_B_srv_torque_off.call(wx200_arm_B_e_srv);
   if (!wx200_arm_B_success)
   {
-    ROS_ERROR("Could not torque off wx200_arm_B arm.");
+    ROS_ERROR("Could not torque off wx200_arm_B.");
     return 1;
   }
   else{
-    ROS_WARN("wx200_arm_B torqued off!")
+    ROS_WARN("wx200_arm_B torqued off!");
   }
 
   size_t pose_cntr = 0;
-  ros::Rate loop_rate(50);
   while (ros::ok())
   {
-    if (pose_cntr == 3){
-      ROS_WARN("Executing pose...stand clear!");
-      ros::Duration.sleep(10.0); // waiting for user to stand clear
-      // execute the sequence of waypoints
-    }
     ros::spinOnce();
     loop_rate.sleep();
   }

@@ -64,6 +64,30 @@ add_dependencies(manual_poses ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(manual_poses ${catkin_LIBRARIES})
 
+# run_through_waypoints executable
+add_executable(run_through_waypoints src/run_through_waypoints.cpp)
+add_dependencies(run_through_waypoints ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(run_through_waypoints ${catkin_LIBRARIES})
+
+# waypoint_1 executable
+add_executable(waypoint_1 src/waypoint_1.cpp)
+add_dependencies(waypoint_1 ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(waypoint_1 ${catkin_LIBRARIES})
+
+# waypoint_2 executable
+add_executable(waypoint_2 src/waypoint_2.cpp)
+add_dependencies(waypoint_2 ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(waypoint_2 ${catkin_LIBRARIES})
+
+# waypoint_3 executable
+add_executable(waypoint_3 src/waypoint_3.cpp)
+add_dependencies(waypoint_3 ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(waypoint_3 ${catkin_LIBRARIES})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
