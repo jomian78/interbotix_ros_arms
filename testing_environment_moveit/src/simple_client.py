@@ -17,6 +17,19 @@ def send_to_home_client():
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
+'''
+Send the arms to custom positions using joint angles
+'''
+# def send_to_custom_client():
+#     print "Requesting send_to_custom service"
+#     rospy.wait_for_service('send_to_custom')
+#     try:
+#         new_positions = rospy.ServiceProxy('send_to_custom', send_to_custom)
+#         resp1 = send_to_custom()
+#         return resp1.confirm
+#     except rospy.ServiceException, e:
+#         print "Service call failed: %s"%e
+
 
 '''
 Standard positions for arms A and B to present objects to the rats
