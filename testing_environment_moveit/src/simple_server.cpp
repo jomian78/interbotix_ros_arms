@@ -14,20 +14,23 @@
 
 class SimpleServer{
   public:
-    SimpleServer(std::string planning_group):move_group(planning_group){
-      joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
+    SimpleServer(std::string planning_group):move_group(planning_group){ // initialize move_group with planning_group name
+      joint_model_group = move_group.getCurrentState()->getJointModelGroup(planning_group);
+      PLANNING_GROUP = planning_group; // set our private planning_group variable for future use with this object
       init_services();
     };
-    void init_services();
-    void send_to_home();
-    void move_arms_to_home();
 
   private:
     ros::NodeHandle nh;
-    static const std::string PLANNING_GROUP;
+    ros::ServiceServer srv_send_to_home;
+    std::string PLANNING_GROUP;
     moveit::planning_interface::MoveGroupInterface move_group;
     moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
     const robot_state::JointModelGroup* joint_model_group;
+
+    void init_services();
+    bool send_to_home(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
+    void move_arms_to_home();
 
 };
 
