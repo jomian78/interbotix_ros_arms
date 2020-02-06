@@ -3,17 +3,20 @@ import sys
 import rospy
 import tf
 import geometry_msgs.msg
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from std_srvs.srv import Empty
 
 '''
 Send the arms to their home position at the edge of the workspace
 '''
 def send_to_home_client():
     print "Requesting send_to_home service"
-    rospy.wait_for_service('send_to_home')
+    rospy.wait_for_service('/testing_environment/send_to_home')
     try:
-        new_positions = rospy.ServiceProxy('send_to_home', send_to_home)
+        send_to_home = rospy.ServiceProxy('/testing_environment/send_to_home', Empty)
         resp1 = send_to_home()
-        return resp1.confirm
+        return resp1
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
 
@@ -111,7 +114,7 @@ the home position (specify CW or CCW?)
         in order in the main function
 '''
 if __name__ == "__main__":
-    print "Running script"
+    print "Running send_to_home client"
 
     # call services here
-    print "send_to_home_client: %s" %send_to_home_client()
+    send_to_home_client()

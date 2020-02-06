@@ -35,6 +35,7 @@ class SimpleServer{
 };
 
 void SimpleServer::init_services(){
+  ROS_WARN("INITIALIZING SERVICES!");
   srv_send_to_home = nh.advertiseService("send_to_home", &SimpleServer::send_to_home, this);
 }
 
@@ -42,8 +43,8 @@ void SimpleServer::init_services(){
 * Send_to_home function
 */
 bool SimpleServer::send_to_home(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res){
+  ROS_WARN("REQUEST: SEND ARMS TO HOME POSITION");
   move_arms_to_home();
-  ROS_INFO("request: send arms to home position");
   return true;
 }
 
@@ -51,27 +52,28 @@ bool SimpleServer::send_to_home(std_srvs::Empty::Request &req, std_srvs::Empty::
 * Home position helper
 */
 void SimpleServer::move_arms_to_home(){
+  ROS_WARN("MOVING BOTH ARMS!");
   std::vector<double> joint_group_positions;
 
-  joint_group_positions[0] = 0.0;
-  joint_group_positions[1] = 0.0;
-  joint_group_positions[2] = 0.0;
-  joint_group_positions[3] = 0.0;
-  joint_group_positions[4] = 0.0;
-  joint_group_positions[5] = 0.0;
-  joint_group_positions[6] = 0.0;
-  joint_group_positions[7] = 0.0;
-  joint_group_positions[8] = 0.0;
-  joint_group_positions[9] = 0.0;
-  joint_group_positions[10] = 0.0;
-  joint_group_positions[11] = 0.0;
-  joint_group_positions[12] = 0.0;
-  joint_group_positions[13] = 0.0;
-  joint_group_positions[14] = 0.0;
-  joint_group_positions[15] = 0.0;
+  // Set all 8 joints on each arm (16 in total) to 0.0 for home position
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
+  joint_group_positions.push_back(0.0);
 
   move_group.setJointValueTarget(joint_group_positions);
-  ROS_WARN("Moving both arms!");
   move_group.move();
 }
 
@@ -81,11 +83,12 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "simple_server");
   ROS_INFO("Ready to send commands to both arms.");
 
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
+
   SimpleServer SimpleServer1("testing_environment");
-  ros::Rate loop_rate(50);
   while(ros::ok()){
-    ros::spinOnce();
-    loop_rate.sleep();
+    ;
   }
   return 0;
 }

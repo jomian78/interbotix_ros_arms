@@ -88,6 +88,12 @@ add_dependencies(waypoint_3 ${${PROJECT_NAME}_EXPORTED_TARGETS}
                  ${catkin_EXPORTED_TARGETS})
 target_link_libraries(waypoint_3 ${catkin_LIBRARIES})
 
+# simple_server executable
+add_executable(simple_server src/simple_server.cpp)
+add_dependencies(simple_server ${${PROJECT_NAME}_EXPORTED_TARGETS}
+                 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(simple_server ${catkin_LIBRARIES})
+
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
   PATTERN "setup_assistant.launch" EXCLUDE)
 install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
