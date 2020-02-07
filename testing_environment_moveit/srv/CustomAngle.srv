@@ -1,0 +1,6 @@
+# angles for arm A
+float64[] arm_a_angles
+
+# angles for arm B
+float64[] arm_b_angles
+---

@@ -6,6 +6,7 @@ import geometry_msgs.msg
 from std_msgs.msg import String
 from std_msgs.msg import Bool
 from std_srvs.srv import Empty
+from testing_environment_moveit.srv import *
 
 '''
 Send the arms to their home position at the edge of the workspace
@@ -23,15 +24,15 @@ def send_to_home_client():
 '''
 Send the arms to custom positions using joint angles
 '''
-# def send_to_custom_client():
-#     print "Requesting send_to_custom service"
-#     rospy.wait_for_service('send_to_custom')
-#     try:
-#         new_positions = rospy.ServiceProxy('send_to_custom', send_to_custom)
-#         resp1 = send_to_custom()
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
+def send_to_custom_angles_client(arm_a_angles, arm_b_angles):
+    print "Requesting send_to_custom_angles service"
+    rospy.wait_for_service('/testing_environment/send_to_custom_angles')
+    try:
+        send_to_custom_angles = rospy.ServiceProxy('/testing_environment/send_to_custom_angles', CustomAngle)
+        resp1 = send_to_custom_angles(arm_a_angles, arm_b_angles)
+        return resp1
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
 
 
 '''
@@ -118,3 +119,8 @@ if __name__ == "__main__":
 
     # call services here
     send_to_home_client()
+
+    print "Running send_to_custom_angles_client client"
+    a = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    b = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    send_to_custom_angles_client(a, b)

@@ -1,0 +1,16 @@
+# x,y,z and r,p,y for arm A with respect to origin
+float64 arm_a_x_pos
+float64 arm_a_y_pos
+float64 arm_a_z_pos
+float64 arm_a_r_ang
+float64 arm_a_p_ang
+float64 arm_a_y_ang
+
+# x,y,z and r,p,y for arm B with respect to origin
+float64 arm_b_x_pos
+float64 arm_b_y_pos
+float64 arm_b_z_pos
+float64 arm_b_r_ang
+float64 arm_b_p_ang
+float64 arm_b_y_ang
+---

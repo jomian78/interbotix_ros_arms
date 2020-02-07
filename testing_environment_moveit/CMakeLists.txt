@@ -9,11 +9,24 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_ros_planning
   moveit_ros_planning_interface
   moveit_visual_tools
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(Eigen3 REQUIRED)
+
+# Service generators
+add_service_files(
+  FILES
+  CustomAngle.srv
+)
+
+# Generate messages
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
 
 catkin_package()
 # CATKIN_DEPENDS roscpp sensor_msgs message_filters
