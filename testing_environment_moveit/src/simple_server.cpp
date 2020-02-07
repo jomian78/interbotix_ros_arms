@@ -20,6 +20,7 @@ class SimpleServer{
     SimpleServer(std::string planning_group):move_group(planning_group){ // initialize move_group with planning_group name
       joint_model_group = move_group.getCurrentState()->getJointModelGroup(planning_group);
       PLANNING_GROUP = planning_group; // set our private planning_group variable for future use with this object
+      current_state = move_group.getCurrentState();
       init_services();
     };
 
@@ -29,6 +30,8 @@ class SimpleServer{
     moveit::planning_interface::MoveGroupInterface move_group;
     moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
     const robot_state::JointModelGroup* joint_model_group;
+    moveit::core::RobotStatePtr current_state;
+
 
     // initialize all services (to be called with the python client)
     void init_services();
@@ -86,13 +89,10 @@ void SimpleServer::move_arms_to_home(){
 
   move_group.setJointValueTarget(joint_group_positions);
   move_group.move();
-  ROS_WARN("LINE 89");
 }
 
 bool SimpleServer::send_to_custom_angles(testing_environment_moveit::CustomAngle::Request &req, testing_environment_moveit::CustomAngle::Response &res){
   ROS_WARN("REQUEST: SEND ARMS TO CUSTOM ANGLES!");
-  // ROS_WARN("first value for arm_a in custom request: %f", req.arm_a_angles[0]);
-  // move_arms_to_custom_angles(req.arm_a_angles, req.arm_b_angles);
   double a[8];
   double b[8];
   for (int i = 0; i < 8; i++){
@@ -106,27 +106,21 @@ bool SimpleServer::send_to_custom_angles(testing_environment_moveit::CustomAngle
 }
 
 void SimpleServer::move_arms_to_custom_angles(double arm_a_angles[], double arm_b_angles[]){
-  ROS_WARN("MOVING BOTH ARMS!");
+  ROS_WARN("MOVING BOTH ARMS TO CUSTOM ANGLES!");
   std::vector<double> joint_group_positions;
+  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
 
-  // Set all 8 joints on each arm (16 in total) to the user-requested angles
-  joint_group_positions.push_back(arm_a_angles[0]);
-  joint_group_positions.push_back(arm_a_angles[1]);
-  joint_group_positions.push_back(arm_a_angles[2]);
-  joint_group_positions.push_back(arm_a_angles[3]);
-  joint_group_positions.push_back(arm_a_angles[4]);
-  joint_group_positions.push_back(arm_a_angles[5]);
-  joint_group_positions.push_back(arm_a_angles[6]);
-  joint_group_positions.push_back(arm_a_angles[7]);
-
-  joint_group_positions.push_back(arm_b_angles[0]);
-  joint_group_positions.push_back(arm_b_angles[1]);
-  joint_group_positions.push_back(arm_b_angles[2]);
-  joint_group_positions.push_back(arm_b_angles[3]);
-  joint_group_positions.push_back(arm_b_angles[4]);
-  joint_group_positions.push_back(arm_b_angles[5]);
-  joint_group_positions.push_back(arm_b_angles[6]);
-  joint_group_positions.push_back(arm_b_angles[7]);
+  // Set all 5 joints on each arm (10 in total) to the user-requested angles
+  joint_group_positions[0] = arm_a_angles[0];
+  joint_group_positions[1] = arm_a_angles[1];
+  joint_group_positions[2] = arm_a_angles[2];
+  joint_group_positions[3] = arm_a_angles[3];
+  joint_group_positions[4] = arm_a_angles[4];
+  joint_group_positions[5] = arm_b_angles[0];
+  joint_group_positions[6] = arm_b_angles[1];
+  joint_group_positions[7] = arm_b_angles[2];
+  joint_group_positions[8] = arm_b_angles[3];
+  joint_group_positions[9] = arm_b_angles[4];
 
   move_group.setJointValueTarget(joint_group_positions);
   move_group.move();

@@ -2,6 +2,7 @@
 import sys
 import rospy
 import tf
+import numpy as np
 import geometry_msgs.msg
 from std_msgs.msg import String
 from std_msgs.msg import Bool
@@ -115,12 +116,13 @@ the home position (specify CW or CCW?)
         in order in the main function
 '''
 if __name__ == "__main__":
-    print "Running send_to_home client"
+    # print "Running send_to_home client"
 
     # call services here
-    send_to_home_client()
+    # send_to_home_client()
 
     print "Running send_to_custom_angles_client client"
-    a = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    b = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    # CW = +, CCW = -
+    a = np.array([0.0, 0.0, 0.0, 0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    b = np.array([0.0, 0.0, 0.0, -0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
     send_to_custom_angles_client(a, b)
