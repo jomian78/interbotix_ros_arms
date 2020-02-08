@@ -16,7 +16,7 @@ def send_to_home_client():
     print "Requesting send_to_home service"
     rospy.wait_for_service('/testing_environment/send_to_home')
     try:
-        send_to_home = rospy.ServiceProxy('/testing_environment/send_to_home', Empty)
+        send_to_home = rospy.ServiceProxy('/testing_environment/send_to_home', Empty, persistent=True)
         resp1 = send_to_home()
         return resp1
     except rospy.ServiceException, e:
@@ -29,7 +29,7 @@ def send_to_custom_angles_client(arm_a_angles, arm_b_angles):
     print "Requesting send_to_custom_angles service"
     rospy.wait_for_service('/testing_environment/send_to_custom_angles')
     try:
-        send_to_custom_angles = rospy.ServiceProxy('/testing_environment/send_to_custom_angles', CustomAngle)
+        send_to_custom_angles = rospy.ServiceProxy('/testing_environment/send_to_custom_angles', CustomAngle, persistent=True)
         resp1 = send_to_custom_angles(arm_a_angles, arm_b_angles)
         return resp1
     except rospy.ServiceException, e:
@@ -116,13 +116,23 @@ the home position (specify CW or CCW?)
         in order in the main function
 '''
 if __name__ == "__main__":
-    # print "Running send_to_home client"
-
     # call services here
-    # send_to_home_client()
+    print "Running send_to_home client"
+    # Home position angles: 0.0 for all joints
+    send_to_home_client()
 
     print "Running send_to_custom_angles_client client"
     # CW = +, CCW = -
     a = np.array([0.0, 0.0, 0.0, 0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
     b = np.array([0.0, 0.0, 0.0, -0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    send_to_custom_angles_client(a, b)
+
+    print "Running send_to_home client a second time"
+    # Home position angles: 0.0 for all joints
+    send_to_home_client()
+
+    print "Running send_to_custom_angles_client client a second time"
+    # CW = +, CCW = -
+    a = np.array([-1.0, 0.0, 0.0, 0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    b = np.array([-1.0, 0.0, 0.0, -0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
     send_to_custom_angles_client(a, b)

@@ -131,7 +131,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "simple_server");
   ROS_INFO("Ready to send commands to both arms.");
 
-  ros::AsyncSpinner spinner(1);
+  ros::AsyncSpinner spinner(2);
   spinner.start();
 
   SimpleServer SimpleServer1("testing_environment");
