@@ -23,6 +23,7 @@ class SimpleServer{
       PLANNING_GROUP = planning_group; // set our private planning_group variable for future use with this object
       current_state = move_group.getCurrentState();
       init_services();
+      init_params();
     };
 
   private:
@@ -33,9 +34,26 @@ class SimpleServer{
     const robot_state::JointModelGroup* joint_model_group;
     moveit::core::RobotStatePtr current_state;
 
+    // Arm B's base position and orientation relative to arm A's base
+    float relative_x;
+    float relative_y;
+    float relative_z;
+    float relative_roll;
+    float relative_pitch;
+    float relative_yaw;
+
+    // Perch x,y position and height relative to arm A's base
+    // orientation will always be facing the arms
+    // assume 0.3cm x 0.3cm x 0.3cm operating volume
+    float perch_x;
+    float perch_y;
+    float perch_z;
 
     // initialize all services (to be called with the python client)
     void init_services();
+
+    // initialize all parameters (set via testing_environment.launch args)
+    void init_params();
 
     // send_to_home service
     ros::ServiceServer srv_send_to_home;
@@ -58,6 +76,19 @@ void SimpleServer::init_services(){
   srv_send_to_home = nh.advertiseService("send_to_home", &SimpleServer::send_to_home, this);
   srv_send_to_custom_angles = nh.advertiseService("send_to_custom_angles", &SimpleServer::send_to_custom_angles, this);
   srv_send_to_custom_positions = nh.advertiseService("send_to_custom_positions", &SimpleServer::send_to_custom_positions, this);
+}
+
+void SimpleServer::init_params(){
+  nh.param<float>("/testing_environment/simple_server/relative_x", relative_x, 0.0);
+  nh.param<float>("/testing_environment/simple_server/relative_y", relative_y, 0.22);
+  nh.param<float>("/testing_environment/simple_server/relative_z", relative_z, 0.0);
+  nh.param<float>("/testing_environment/simple_server/relative_roll", relative_roll, 0.0);
+  nh.param<float>("/testing_environment/simple_server/relative_pitch", relative_pitch, 0.0);
+  nh.param<float>("/testing_environment/simple_server/relative_yaw", relative_yaw, 0.0);
+
+  nh.param<float>("/testing_environment/simple_server/perch_x", perch_x, 0.3);
+  nh.param<float>("/testing_environment/simple_server/perch_y", perch_y, 0.11); // halfway between the two arms
+  nh.param<float>("/testing_environment/simple_server/perch_z", perch_z, 0.15);
 }
 
 /**
@@ -180,7 +211,6 @@ void SimpleServer::move_arms_to_custom_positions(double arm_a_x_pos, double arm_
   arm_B_wrist_rotate_constraint.tolerance_above = 0.05;
   arm_B_wrist_rotate_constraint.tolerance_below = 0.05;
   arm_B_wrist_rotate_constraint.weight = 0.9; // denotes relative importance 0-1
-
 
   moveit_msgs::Constraints arm_constraints;
   arm_constraints.joint_constraints.push_back(arm_A_wrist_angle_constraint);

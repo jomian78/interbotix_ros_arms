@@ -18,6 +18,11 @@
   <arg name="relative_pitch"                    default=""/>
   <arg name="relative_yaw"                      default=""/>
 
+  <!-- Perch x,y position and height relative to arm A base -->
+  <arg name="perch_x"                           default=""/>
+  <arg name="perch_y"                           default=""/>
+  <arg name="perch_z"                           default=""/>
+
   <!-- Are we running this in Gazebo or the Real World? -->
   <arg name="use_gazebo"                         default="false"/>
   <arg name="use_actual"                         default="true"/>
@@ -48,6 +53,10 @@
     <arg name="relative_roll"                     value="$(arg relative_roll)"/>
     <arg name="relative_pitch"                    value="$(arg relative_pitch)"/>
     <arg name="relative_yaw"                      value="$(arg relative_yaw)"/>
+
+    <arg name="perch_x"                           value="$(arg perch_x)"/>
+    <arg name="perch_y"                           value="$(arg perch_y)"/>
+    <arg name="perch_z"                           value="$(arg perch_z)"/>
 
     <arg name="use_default_rviz"                  value="false"/>
     <arg name="load_moveit_world_frame"           value="true"/>

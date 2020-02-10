@@ -20,6 +20,11 @@
   <arg name="relative_pitch"                default=""/>
   <arg name="relative_yaw"                  default=""/>
 
+  <!-- Perch x,y position and height relative to arm A base -->
+  <arg name="perch_x"                       default=""/>
+  <arg name="perch_y"                       default=""/>
+  <arg name="perch_z"                       default=""/>
+
   <!-- world/visualization configurations for the testing environment -->
   <arg name="use_default_rviz"                  default="false"/>
   <arg name="load_moveit_world_frame"           default="true"/>
@@ -148,6 +153,12 @@
     type="shape_waypoints"
     output="screen"
     ns="$(arg robot_name)">
+    <param name="relative_x" value="$(arg relative_x)" />
+    <param name="relative_y" value="$(arg relative_y)" />
+    <param name="relative_z" value="$(arg relative_z)" />
+    <param name="relative_roll" value="$(arg relative_roll)" />
+    <param name="relative_pitch" value="$(arg relative_pitch)" />
+    <param name="relative_yaw" value="$(arg relative_yaw)" />
   </node> -->
 
   <!-- <node
@@ -172,6 +183,15 @@
     type="simple_server"
     output="screen"
     ns="$(arg robot_name)">
+    <param name="relative_x" value="$(arg relative_x)" />
+    <param name="relative_y" value="$(arg relative_y)" />
+    <param name="relative_z" value="$(arg relative_z)" />
+    <param name="relative_roll" value="$(arg relative_roll)" />
+    <param name="relative_pitch" value="$(arg relative_pitch)" />
+    <param name="relative_yaw" value="$(arg relative_yaw)" />
+    <param name="perch_x" value="$(arg perch_x)" />
+    <param name="perch_y" value="$(arg perch_y)" />
+    <param name="perch_z" value="$(arg perch_z)" />
   </node>
 
 </launch>

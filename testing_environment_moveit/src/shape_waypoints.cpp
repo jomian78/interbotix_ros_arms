@@ -26,12 +26,12 @@ int main(int argc, char** argv)
   float relative_roll;
   float relative_pitch;
   float relative_yaw;
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_x", relative_x, 0.0);
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_y", relative_y, 0.24);
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_z", relative_z, 0.0);
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_roll", relative_roll, 0.0);
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_pitch", relative_pitch, 0.0);
-  nh.param<float>("/testing_environment/pseudo_random_arm_poses/relative_yaw", relative_yaw, 0.0);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_x", relative_x, 0.0);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_y", relative_y, 0.24);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_z", relative_z, 0.0);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_roll", relative_roll, 0.0);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_pitch", relative_pitch, 0.0);
+  nh.param<float>("/testing_environment/shape_waypoints/relative_yaw", relative_yaw, 0.0);
   ROS_WARN("relative_y value: %f", relative_y);
 
   // perch distance and yaw
