@@ -14,6 +14,7 @@
 
 // custom srvs
 #include <testing_environment_moveit/CustomAngle.h>
+#include <testing_environment_moveit/CustomPosition.h>
 
 class SimpleServer{
   public:
@@ -45,12 +46,18 @@ class SimpleServer{
     ros::ServiceServer srv_send_to_custom_angles;
     bool send_to_custom_angles(testing_environment_moveit::CustomAngle::Request &req, testing_environment_moveit::CustomAngle::Response &res);
     void move_arms_to_custom_angles(double arm_a_angles[], double arm_b_angles[]);
+
+    // send_to_custom_positions service
+    ros::ServiceServer srv_send_to_custom_positions;
+    bool send_to_custom_positions(testing_environment_moveit::CustomPosition::Request &req, testing_environment_moveit::CustomPosition::Response &res);
+    void move_arms_to_custom_positions(double arm_a_x_pos, double arm_a_y_pos, double arm_a_z_pos, double arm_b_x_pos, double arm_b_y_pos, double arm_b_z_pos);
 };
 
 void SimpleServer::init_services(){
   ROS_WARN("INITIALIZING SERVICES!");
   srv_send_to_home = nh.advertiseService("send_to_home", &SimpleServer::send_to_home, this);
   srv_send_to_custom_angles = nh.advertiseService("send_to_custom_angles", &SimpleServer::send_to_custom_angles, this);
+  srv_send_to_custom_positions = nh.advertiseService("send_to_custom_positions", &SimpleServer::send_to_custom_positions, this);
 }
 
 /**
@@ -67,27 +74,27 @@ bool SimpleServer::send_to_home(std_srvs::Empty::Request &req, std_srvs::Empty::
 */
 void SimpleServer::move_arms_to_home(){
   ROS_WARN("MOVING BOTH ARMS!");
-  std::vector<double> joint_group_positions;
+  std::vector<double> joint_group_angles;
 
   // Set all 8 joints on each arm (16 in total) to 0.0 for home position
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
-  joint_group_positions.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
+  joint_group_angles.push_back(0.0);
 
-  move_group.setJointValueTarget(joint_group_positions);
+  move_group.setJointValueTarget(joint_group_angles);
   move_group.move();
 }
 
@@ -107,23 +114,88 @@ bool SimpleServer::send_to_custom_angles(testing_environment_moveit::CustomAngle
 
 void SimpleServer::move_arms_to_custom_angles(double arm_a_angles[], double arm_b_angles[]){
   ROS_WARN("MOVING BOTH ARMS TO CUSTOM ANGLES!");
-  std::vector<double> joint_group_positions;
-  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+  std::vector<double> joint_group_angles;
+  current_state->copyJointGroupPositions(joint_model_group, joint_group_angles);
 
   // Set all 5 joints on each arm (10 in total) to the user-requested angles
-  joint_group_positions[0] = arm_a_angles[0];
-  joint_group_positions[1] = arm_a_angles[1];
-  joint_group_positions[2] = arm_a_angles[2];
-  joint_group_positions[3] = arm_a_angles[3];
-  joint_group_positions[4] = arm_a_angles[4];
-  joint_group_positions[5] = arm_b_angles[0];
-  joint_group_positions[6] = arm_b_angles[1];
-  joint_group_positions[7] = arm_b_angles[2];
-  joint_group_positions[8] = arm_b_angles[3];
-  joint_group_positions[9] = arm_b_angles[4];
+  joint_group_angles[0] = arm_a_angles[0];
+  joint_group_angles[1] = arm_a_angles[1];
+  joint_group_angles[2] = arm_a_angles[2];
+  joint_group_angles[3] = arm_a_angles[3];
+  joint_group_angles[4] = arm_a_angles[4];
+  joint_group_angles[5] = arm_b_angles[0];
+  joint_group_angles[6] = arm_b_angles[1];
+  joint_group_angles[7] = arm_b_angles[2];
+  joint_group_angles[8] = arm_b_angles[3];
+  joint_group_angles[9] = arm_b_angles[4];
 
-  move_group.setJointValueTarget(joint_group_positions);
+  move_group.setJointValueTarget(joint_group_angles);
   move_group.move();
+}
+
+bool SimpleServer::send_to_custom_positions(testing_environment_moveit::CustomPosition::Request &req, testing_environment_moveit::CustomPosition::Response &res){
+  ROS_WARN("REQUEST: SEND ARMS TO CUSTOM POSITIONS!");
+  double arm_a_x_pos = req.arm_a_x_pos;
+  double arm_a_y_pos = req.arm_a_y_pos;
+  double arm_a_z_pos = req.arm_a_z_pos;
+
+  double arm_b_x_pos = req.arm_b_x_pos;
+  double arm_b_y_pos = req.arm_b_y_pos;
+  double arm_b_z_pos = req.arm_b_z_pos;
+
+  move_arms_to_custom_positions(arm_a_x_pos, arm_a_y_pos, arm_a_z_pos, arm_b_x_pos, arm_b_y_pos, arm_b_z_pos);
+  return true;
+
+}
+
+void SimpleServer::move_arms_to_custom_positions(double arm_a_x_pos, double arm_a_y_pos, double arm_a_z_pos, double arm_b_x_pos, double arm_b_y_pos, double arm_b_z_pos){
+  ROS_WARN("MOVING BOTH ARMS TO CUSTOM POSITIONS!");
+  move_group.setPositionTarget(arm_a_x_pos,arm_a_y_pos,arm_a_z_pos,"wx200_arm_A/ee_arm_link");
+  move_group.setPositionTarget(arm_b_x_pos,arm_b_y_pos,arm_b_z_pos,"wx200_arm_B/ee_arm_link");
+
+  moveit_msgs::JointConstraint arm_A_wrist_angle_constraint;
+  arm_A_wrist_angle_constraint.joint_name = "wx200_arm_A_wrist_angle";
+  arm_A_wrist_angle_constraint.position = 0.0;
+  arm_A_wrist_angle_constraint.tolerance_above = 0.05;
+  arm_A_wrist_angle_constraint.tolerance_below = 0.05;
+  arm_A_wrist_angle_constraint.weight = 1.0; // denotes relative importance 0-1
+
+  moveit_msgs::JointConstraint arm_A_wrist_rotate_constraint;
+  arm_A_wrist_rotate_constraint.joint_name = "wx200_arm_A_wrist_rotate";
+  arm_A_wrist_rotate_constraint.position = 0.0;
+  arm_A_wrist_rotate_constraint.tolerance_above = 0.05;
+  arm_A_wrist_rotate_constraint.tolerance_below = 0.05;
+  arm_A_wrist_rotate_constraint.weight = 0.9; // denotes relative importance 0-1
+
+  moveit_msgs::JointConstraint arm_B_wrist_angle_constraint;
+  arm_B_wrist_angle_constraint.joint_name = "wx200_arm_B_wrist_angle";
+  arm_B_wrist_angle_constraint.position = 0.0;
+  arm_B_wrist_angle_constraint.tolerance_above = 0.05;
+  arm_B_wrist_angle_constraint.tolerance_below = 0.05;
+  arm_B_wrist_angle_constraint.weight = 1.0; // denotes relative importance 0-1
+
+  moveit_msgs::JointConstraint arm_B_wrist_rotate_constraint;
+  arm_B_wrist_rotate_constraint.joint_name = "wx200_arm_B_wrist_rotate";
+  arm_B_wrist_rotate_constraint.position = 0.0;
+  arm_B_wrist_rotate_constraint.tolerance_above = 0.05;
+  arm_B_wrist_rotate_constraint.tolerance_below = 0.05;
+  arm_B_wrist_rotate_constraint.weight = 0.9; // denotes relative importance 0-1
+
+
+  moveit_msgs::Constraints arm_constraints;
+  arm_constraints.joint_constraints.push_back(arm_A_wrist_angle_constraint);
+  arm_constraints.joint_constraints.push_back(arm_A_wrist_rotate_constraint);
+  arm_constraints.joint_constraints.push_back(arm_B_wrist_angle_constraint);
+  arm_constraints.joint_constraints.push_back(arm_B_wrist_rotate_constraint);
+  move_group.setPathConstraints(arm_constraints);
+
+  move_group.setPlanningTime(10.0);
+  move_group.move();
+
+  // clear path constraints
+  ROS_WARN("Done!");
+  ROS_WARN("Clearing path constraints...");
+  move_group.clearPathConstraints();
 }
 
 int main(int argc, char **argv)
@@ -131,7 +203,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "simple_server");
   ROS_INFO("Ready to send commands to both arms.");
 
-  ros::AsyncSpinner spinner(2);
+  ros::AsyncSpinner spinner(3);
   spinner.start();
 
   SimpleServer SimpleServer1("testing_environment");

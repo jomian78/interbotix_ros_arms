@@ -37,77 +37,17 @@ def send_to_custom_angles_client(arm_a_angles, arm_b_angles):
 
 
 '''
-Standard positions for arms A and B to present objects to the rats
+Send the arms to custom end-effector positions/orientations (w.r.t to our perch reference point)
 '''
-# def two_options_client(p1,p2):
-#     print "Requesting two options"
-#     rospy.wait_for_service('two_options')
-#     try:
-#         two_options = rospy.ServiceProxy('two_options', two_options)
-#         resp1 = two_options(p1,p2)
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
-
-'''
-Generate positions within a sphere
-of radius r (with no collisions)
-for both arms
-'''
-# def new_positions_client(r):
-#     print "Requesting new positions"
-#     rospy.wait_for_service('new_positions')
-#     try:
-#         new_positions = rospy.ServiceProxy('new_positions', new_positions)
-#         resp1 = new_positions(r)
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
-
-'''
-Send the arms
-to a sequence of waypoints
-specified by the user
-'''
-# def waypoints_client(set1, set2):
-#     print "Requesting arms move to waypoints"
-#     rospy.wait_for_service('waypoints')
-#     try:
-#         waypoints = rospy.ServiceProxy('waypoints', waypoints)
-#         resp1 = waypoints(set1, set2)
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
-
-'''
-Swap the object on arm A
-after the arm has been moved to
-the home position (specify CW or CCW?)
-'''
-# def swap_A_client():
-#     print "swapping object A"
-#     rospy.wait_for_service('swap_A')
-#     try:
-#         swap_A = rospy.ServiceProxy('swap_A', swap_A)
-#         resp1 = swap_A()
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
-
-'''
-Swap the object on arm B
-after the arm has been moved to
-the home position (specify CW or CCW?)
-'''
-# def swap_B_client():
-#     print "swapping object B"
-#     rospy.wait_for_service('swap_B')
-#     try:
-#         swap_B = rospy.ServiceProxy('swap_B', swap_B)
-#         resp1 = swap_B()
-#         return resp1.confirm
-#     except rospy.ServiceException, e:
-#         print "Service call failed: %s"%e
+def send_to_custom_positions_client(arm_a_x,arm_a_y, arm_a_z, arm_b_x, arm_b_y, arm_b_z):
+    print "Requesting send_to_custom_positions service"
+    rospy.wait_for_service('/testing_environment/send_to_custom_positions')
+    try:
+        send_to_custom_positions = rospy.ServiceProxy('/testing_environment/send_to_custom_positions', CustomPosition, persistent=True)
+        resp1 = send_to_custom_positions(arm_a_x,arm_a_y, arm_a_z, arm_b_x, arm_b_y, arm_b_z)
+        return resp1
+    except rospy.ServiceException, e:
+        print "Service call failed: %s"%e
 
 
 '''
@@ -116,23 +56,47 @@ the home position (specify CW or CCW?)
         in order in the main function
 '''
 if __name__ == "__main__":
-    # call services here
-    print "Running send_to_home client"
-    # Home position angles: 0.0 for all joints
-    send_to_home_client()
+    # # call services here
+    # print "Running send_to_home client"
+    # # Home position angles: 0.0 for all joints
+    # send_to_home_client()
+    #
+    # print "Running send_to_custom_angles_client client"
+    # # CW = +, CCW = -
+    # a = np.array([0.0, 0.0, 0.0, 0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    # b = np.array([0.0, 0.0, 0.0, -0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    # send_to_custom_angles_client(a, b)
+    #
+    # print "Running send_to_home client a second time"
+    # # Home position angles: 0.0 for all joints
+    # send_to_home_client()
+    #
+    # print "Running send_to_custom_angles_client a second time"
+    # # CW = +, CCW = -
+    # a = np.array([-1.0, 0.0, 0.0, 0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    # b = np.array([-1.0, 0.0, 0.0, -0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
+    # send_to_custom_angles_client(a, b)
 
-    print "Running send_to_custom_angles_client client"
-    # CW = +, CCW = -
-    a = np.array([0.0, 0.0, 0.0, 0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
-    b = np.array([0.0, 0.0, 0.0, -0.2, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
-    send_to_custom_angles_client(a, b)
+    print "Running send_to_custom_positions_client"
+    # test case 1
+    # arm_a_x = 0.3
+    # arm_a_y = -0.2
+    # arm_a_z = 0.3
+    # arm_a_yaw = -0.05
+    #
+    # arm_b_x = 0.3
+    # arm_b_y = 0.42
+    # arm_b_z = 0.3
+    # arm_b_yaw = 0.05
 
-    print "Running send_to_home client a second time"
-    # Home position angles: 0.0 for all joints
-    send_to_home_client()
+    # test case 2
+    arm_a_x = 0.2
+    arm_a_y = 0.05
+    arm_a_z = 0.3
+    arm_a_yaw = -0.05
 
-    print "Running send_to_custom_angles_client client a second time"
-    # CW = +, CCW = -
-    a = np.array([-1.0, 0.0, 0.0, 0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
-    b = np.array([-1.0, 0.0, 0.0, -0.4, 0.0]) # waist,shoulder,elbow,wrist angle, wrist rotate
-    send_to_custom_angles_client(a, b)
+    arm_b_x = 0.2
+    arm_b_y = 0.17
+    arm_b_z = 0.3
+    arm_b_yaw = 0.05
+    send_to_custom_positions_client(arm_a_x,arm_a_y, arm_a_z, arm_b_x, arm_b_y, arm_b_z)

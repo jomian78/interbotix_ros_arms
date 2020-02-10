@@ -20,6 +20,7 @@ find_package(Eigen3 REQUIRED)
 add_service_files(
   FILES
   CustomAngle.srv
+  CustomPosition.srv
 )
 
 # Generate messages
