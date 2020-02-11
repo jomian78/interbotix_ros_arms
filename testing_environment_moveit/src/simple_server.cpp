@@ -24,6 +24,7 @@ class SimpleServer{
       current_state = move_group.getCurrentState();
       init_services();
       init_params();
+      init_collision_objects();
     };
 
   private:
@@ -54,6 +55,9 @@ class SimpleServer{
 
     // initialize all parameters (set via testing_environment.launch args)
     void init_params();
+
+    // initialize perch and collision objects
+    void init_collision_objects();
 
     // send_to_home service
     ros::ServiceServer srv_send_to_home;
@@ -86,9 +90,37 @@ void SimpleServer::init_params(){
   nh.param<float>("/testing_environment/simple_server/relative_pitch", relative_pitch, 0.0);
   nh.param<float>("/testing_environment/simple_server/relative_yaw", relative_yaw, 0.0);
 
-  nh.param<float>("/testing_environment/simple_server/perch_x", perch_x, 0.3);
+  nh.param<float>("/testing_environment/simple_server/perch_x", perch_x, 0.5);
   nh.param<float>("/testing_environment/simple_server/perch_y", perch_y, 0.11); // halfway between the two arms
-  nh.param<float>("/testing_environment/simple_server/perch_z", perch_z, 0.15);
+  nh.param<float>("/testing_environment/simple_server/perch_z", perch_z, 0.3);
+}
+
+void SimpleServer::init_collision_objects(){
+  moveit_msgs::CollisionObject perch;
+  perch.header.frame_id = move_group.getPlanningFrame();
+  perch.id = "perch";
+
+  shape_msgs::SolidPrimitive primitive;
+  primitive.type = primitive.BOX;
+  primitive.dimensions.resize(3);
+  primitive.dimensions[0] = 0.05;
+  primitive.dimensions[1] = 0.05;
+  primitive.dimensions[2] = perch_z;
+
+  geometry_msgs::Pose box_pose;
+  box_pose.orientation.z = -1.0;
+  box_pose.position.x = perch_x;
+  box_pose.position.y = perch_y;
+  box_pose.position.z = perch_z/2.0;
+
+  perch.primitives.push_back(primitive);
+  perch.primitive_poses.push_back(box_pose);
+  perch.operation = perch.ADD;
+
+  // Add objects to planning_scene_interface
+  std::vector<moveit_msgs::CollisionObject> collision_objects;
+  collision_objects.push_back(perch);
+  planning_scene_interface.addCollisionObjects(collision_objects);
 }
 
 /**
