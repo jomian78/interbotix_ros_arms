@@ -82,21 +82,35 @@ if __name__ == "__main__":
     # arm_a_x = 0.3
     # arm_a_y = -0.2
     # arm_a_z = 0.3
-    # arm_a_yaw = -0.05
     #
     # arm_b_x = 0.3
     # arm_b_y = 0.42
     # arm_b_z = 0.3
-    # arm_b_yaw = 0.05
 
     # test case 2
+    # arm_a_x = 0.2
+    # arm_a_y = 0.05
+    # arm_a_z = 0.3
+    #
+    # arm_b_x = 0.2
+    # arm_b_y = 0.17
+    # arm_b_z = 0.3
+
+    # test case 3
     arm_a_x = 0.2
-    arm_a_y = 0.05
-    arm_a_z = 0.3
-    arm_a_yaw = -0.05
+    arm_a_y = 0.11
+    arm_a_z = 0.0
 
     arm_b_x = 0.2
-    arm_b_y = 0.17
-    arm_b_z = 0.3
-    arm_b_yaw = 0.05
+    arm_b_y = -0.11
+    arm_b_z = 0.0
+    send_to_custom_positions_client(arm_a_x,arm_a_y, arm_a_z, arm_b_x, arm_b_y, arm_b_z)
+
+    arm_a_x = 0.3
+    arm_a_y = 0.08
+    arm_a_z = 0.0
+
+    arm_b_x = 0.3
+    arm_b_y = -0.08
+    arm_b_z = 0.0
     send_to_custom_positions_client(arm_a_x,arm_a_y, arm_a_z, arm_b_x, arm_b_y, arm_b_z)

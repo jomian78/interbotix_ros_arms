@@ -16,6 +16,9 @@
 #include <testing_environment_moveit/CustomAngle.h>
 #include <testing_environment_moveit/CustomPosition.h>
 
+// tf2
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+
 class SimpleServer{
   public:
     SimpleServer(std::string planning_group):move_group(planning_group){ // initialize move_group with planning_group name
@@ -59,6 +62,9 @@ class SimpleServer{
     // initialize perch and collision objects
     void init_collision_objects();
 
+    // takes in Tperch_ee; returns Tglobal_ee
+    tf2::Transform global_to_ee(tf2::Transform perch_to_ee);
+
     // send_to_home service
     ros::ServiceServer srv_send_to_home;
     bool send_to_home(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
@@ -96,6 +102,53 @@ void SimpleServer::init_params(){
 }
 
 void SimpleServer::init_collision_objects(){
+  // arm A ground plane
+  moveit_msgs::CollisionObject wx200_arm_A_table;
+  wx200_arm_A_table.header.frame_id = move_group.getPlanningFrame();
+
+  wx200_arm_A_table.id = "wx200_arm_A_table";
+
+  shape_msgs::SolidPrimitive table_A;
+  table_A.type = table_A.BOX;
+  table_A.dimensions.resize(3);
+  table_A.dimensions[0] = 2.0;
+  table_A.dimensions[1] = 2.0;
+  table_A.dimensions[2] = 0.01;
+
+  geometry_msgs::Pose table_arm_A_pose;
+  table_arm_A_pose.orientation.w = 1.0;
+  table_arm_A_pose.position.x = 0.0;
+  table_arm_A_pose.position.y = 0.0;
+  table_arm_A_pose.position.z = -0.005;
+
+  wx200_arm_A_table.primitives.push_back(table_A);
+  wx200_arm_A_table.primitive_poses.push_back(table_arm_A_pose);
+  wx200_arm_A_table.operation = wx200_arm_A_table.ADD;
+
+  // arm B ground plane
+  moveit_msgs::CollisionObject wx200_arm_B_table;
+  wx200_arm_B_table.header.frame_id = move_group.getPlanningFrame();
+
+  wx200_arm_B_table.id = "wx200_arm_B_table";
+
+  shape_msgs::SolidPrimitive table_B;
+  table_B.type = table_B.BOX;
+  table_B.dimensions.resize(3);
+  table_B.dimensions[0] = 2.0;
+  table_B.dimensions[1] = 2.0;
+  table_B.dimensions[2] = 0.01;
+
+  geometry_msgs::Pose table_arm_B_pose;
+  table_arm_B_pose.orientation.w = 1.0;
+  table_arm_B_pose.position.x = relative_x;
+  table_arm_B_pose.position.y = relative_y;
+  table_arm_B_pose.position.z = -0.005;
+
+  wx200_arm_B_table.primitives.push_back(table_B);
+  wx200_arm_B_table.primitive_poses.push_back(table_arm_B_pose);
+  wx200_arm_B_table.operation = wx200_arm_B_table.ADD;
+
+  // perch object
   moveit_msgs::CollisionObject perch;
   perch.header.frame_id = move_group.getPlanningFrame();
   perch.id = "perch";
@@ -120,8 +173,21 @@ void SimpleServer::init_collision_objects(){
   // Add objects to planning_scene_interface
   std::vector<moveit_msgs::CollisionObject> collision_objects;
   collision_objects.push_back(perch);
+  collision_objects.push_back(wx200_arm_A_table);
+  collision_objects.push_back(wx200_arm_B_table);
   planning_scene_interface.addCollisionObjects(collision_objects);
 }
+
+tf2::Transform SimpleServer::global_to_ee(tf2::Transform perch_to_ee){
+  // global to perch
+  tf2::Vector3 perch_position(perch_x,perch_y,perch_z);
+  tf2::Quaternion perch_orientation(tf2::Vector3(0,0,1), 3.1415926);
+  tf2::Transform global_to_perch(perch_orientation, perch_position);
+
+  tf2::Transform global_to_ee = global_to_perch*perch_to_ee;
+  return global_to_ee;
+}
+
 
 /**
 * Send_to_home function
@@ -206,7 +272,25 @@ bool SimpleServer::send_to_custom_positions(testing_environment_moveit::CustomPo
   double arm_b_y_pos = req.arm_b_y_pos;
   double arm_b_z_pos = req.arm_b_z_pos;
 
-  move_arms_to_custom_positions(arm_a_x_pos, arm_a_y_pos, arm_a_z_pos, arm_b_x_pos, arm_b_y_pos, arm_b_z_pos);
+  tf2::Vector3 perch_to_a_pos(arm_a_x_pos, arm_a_y_pos, arm_a_z_pos);
+  tf2::Quaternion perch_to_a_orientation(tf2::Vector3(0,0,1), 0.0);
+  tf2::Transform perch_to_a_transform(perch_to_a_orientation, perch_to_a_pos);
+  tf2::Transform global_to_a_transform = global_to_ee(perch_to_a_transform);
+
+  tf2::Vector3 perch_to_b_pos(arm_b_x_pos, arm_b_y_pos, arm_b_z_pos);
+  tf2::Quaternion perch_to_b_orientation(tf2::Vector3(0,0,1), 0.0);
+  tf2::Transform perch_to_b_transform(perch_to_b_orientation, perch_to_b_pos);
+  tf2::Transform global_to_b_transform = global_to_ee(perch_to_b_transform);
+
+  double new_a_x = global_to_a_transform.getOrigin().x();
+  double new_a_y = global_to_a_transform.getOrigin().y();
+  double new_a_z = global_to_a_transform.getOrigin().z();
+
+  double new_b_x = global_to_b_transform.getOrigin().x();
+  double new_b_y = global_to_b_transform.getOrigin().y();
+  double new_b_z = global_to_b_transform.getOrigin().z();
+
+  move_arms_to_custom_positions(new_a_x, new_a_y, new_a_z, new_b_x, new_b_y, new_b_z);
   return true;
 
 }
